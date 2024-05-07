@@ -30,3 +30,5 @@ build/
 !**/src/test/**/build/
 
 
+### VisualStudioCode ###
+.vscode/*
