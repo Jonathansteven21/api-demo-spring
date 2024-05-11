@@ -7,18 +7,18 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
-import java.util.Optional;
+import java.util.List;
 
 // This interface defines methods to access Order entities in the database
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Integer> {
 
     // Finds orders by the associated client
-    Optional<Order> findByClient(Client client);
+    List<Order> findByClient(Client client);
 
     // Finds orders by the associated historic appliance
-    Optional<Order> findByHistoricAppliance(HistoricAppliance historicAppliance);
+    List<Order> findByHistoricAppliance(HistoricAppliance historicAppliance);
 
     // Finds orders by the created date
-    Optional<Order> findByCreatedDate(LocalDate createdDate);
+    List<Order> findByCreatedDate(LocalDate createdDate);
 }
