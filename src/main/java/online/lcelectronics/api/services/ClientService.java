@@ -1,16 +1,21 @@
 package online.lcelectronics.api.services;
 
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import online.lcelectronics.api.entities.Client;
+import online.lcelectronics.api.exceptions.NotFoundException;
 import online.lcelectronics.api.repositories.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
+@Validated
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class ClientService {
 
@@ -22,35 +27,49 @@ public class ClientService {
     }
 
     // Retrieve a client by their identity card number
-    public Client getClientByIdentityCard(int identityCard) {
-        Optional<Client> optionalClient = clientRepository.findById(identityCard);
-        return optionalClient.orElse(null);
+    public Client getClientByIdentityCard(@NotNull(message = "Identity card number cannot be null") Integer identityCard) {
+        return clientRepository.findById(identityCard)
+                .orElseThrow(() -> new NotFoundException("Client not found with identity card: " + identityCard));
     }
 
-    // Retrieve a client by their phone number
-    public Client getClientByPhone(int phone) {
-        return clientRepository.findByPhone(phone).orElse(null);
+    // Retrieve a client by their phone number; throw NotFoundException if not found.
+    public Client getClientByPhone(@NotNull(message = "Phone number cannot be null") int phone) {
+        return clientRepository.findByPhone(phone)
+                .orElseThrow(() -> new NotFoundException("Client not found with phone number: " + phone));
     }
 
-    // Retrieve clients whose name contains the specified string
-    public List<Client> getClientsByName(String name) {
-        return clientRepository.findByNameContaining(name);
+    // Retrieve clients whose name contains the specified string; throw NotFoundException if not found.
+    public List<Client> getClientsByName(@NotEmpty(message = "Name cannot be empty") String name) {
+        List<Client> clients = clientRepository.findByNameContaining(name);
+        if (clients.isEmpty()) {
+            throw new NotFoundException("Clients not found with name containing: " + name);
+        }
+        return clients;
     }
 
     // Retrieve clients whose identity card contains the specified string
-    public List<Client> getClientsByIdentityCard(String identityCard) {
-        return clientRepository.findByIdentityCardContaining(identityCard);
+    public List<Client> getClientsByIdentityCard(@NotEmpty(message = "Identity card cannot be empty") String identityCard) {
+        List<Client> clients = clientRepository.findByIdentityCardContaining(identityCard);
+        if (clients.isEmpty()) {
+            throw new NotFoundException("Clients not found with identity card containing: " + identityCard);
+        }
+        return clients;
     }
 
     // Save a new client
     @Transactional
-    public Client saveClient(Client client) {
+    public Client saveClient(@Valid Client client) {
         return clientRepository.save(client);
     }
 
     // Update an existing client
     @Transactional
-    public Client updateClient(Client client) {
+    public Client updateClient(@Valid Client client) {
+        if (!clientRepository.existsById(client.getIdentityCard())) {
+            throw new NotFoundException("Client not found with Identity card: " + client.getIdentityCard());
+        }
+
         return clientRepository.saveAndFlush(client);
     }
+
 }

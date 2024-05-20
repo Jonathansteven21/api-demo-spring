@@ -1,26 +1,29 @@
 package online.lcelectronics.api.services;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import online.lcelectronics.api.converters.ApplianceModelConverter;
-import online.lcelectronics.api.dto.ApplianceModelDTO;
+import online.lcelectronics.api.entities.specs.ApplianceModelSpecification;
+import online.lcelectronics.api.exceptions.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import jakarta.transaction.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 import online.lcelectronics.api.entities.ApplianceModel;
-import online.lcelectronics.api.enums.ApplianceCategory;
-import online.lcelectronics.api.enums.Brand;
 import online.lcelectronics.api.repositories.ApplianceModelRepository;
+import org.springframework.validation.annotation.Validated;
 
 @Service
+@Validated
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class ApplianceModelService {
 
     private final ApplianceModelRepository applianceModelRepository;
-    private final ApplianceModelConverter applianceModelConverter;
 
     // Retrieve all appliance models
     public List<ApplianceModel> getAllApplianceModels() {
@@ -28,46 +31,48 @@ public class ApplianceModelService {
     }
 
     // Retrieve an appliance model by its ID
-    public ApplianceModelDTO getApplianceModelById(Integer id) {
-        Optional<ApplianceModel> optionalApplianceModel = applianceModelRepository.findById(id);
-        return optionalApplianceModel.map(applianceModelConverter::toDto).orElse(null);
+    public ApplianceModel getApplianceModelById(@NotNull(message = "ID cannot be null") Integer id) throws NotFoundException {
+        return applianceModelRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Appliance model not found with ID: " + id));
     }
 
     // Retrieve an appliance model by its model
-    public ApplianceModelDTO getApplianceModelByModel(String model) {
-        Optional<ApplianceModel> optionalApplianceModel = applianceModelRepository.findByModel(model);
-        return optionalApplianceModel.map(applianceModelConverter::toDto).orElse(null);
+    public ApplianceModel getApplianceModelByModel(@NotEmpty(message = "Model cannot be null or empty") String model) throws NotFoundException {
+        return applianceModelRepository.findByModel(model)
+                .orElseThrow(() -> new NotFoundException("Appliance model not found with model: " + model));
     }
 
-    // Retrieve appliance models whose model contains the specified substring
-    public List<ApplianceModel> getApplianceModelsByModelContaining(String model) {
-        return applianceModelRepository.findByModelContaining(model);
-    }
+    // Retrieve appliance models based on specified criteria.
+    public List<ApplianceModel> getApplianceModelsByCriteria(ApplianceModel applianceModel) {
+        Specification<ApplianceModel> spec = Specification.where(ApplianceModelSpecification.modelContainsIgnoreCase(applianceModel.getModel()))
+                .and(ApplianceModelSpecification.hasApplianceCategory(applianceModel.getApplianceCategory()))
+                .and(ApplianceModelSpecification.yearGreaterThanOrEqual(applianceModel.getYear()))
+                .and(ApplianceModelSpecification.hasBrand(applianceModel.getBrand()));
 
-    // Retrieve appliance models by their category and brand
-    public List<ApplianceModel> getApplianceModelsByApplianceCategoryAndBrand(ApplianceCategory category, Brand brand) {
-        return applianceModelRepository.findByApplianceCategoryAndBrand(category, brand);
-    }
+        List<ApplianceModel> applianceModelList = applianceModelRepository.findAll(spec);
 
-    // Retrieve appliance models by their category
-    public List<ApplianceModel> getApplianceModelsByApplianceCategory(ApplianceCategory category) {
-        return applianceModelRepository.findByApplianceCategory(category);
-    }
-
-    // Retrieve appliance models by their brand
-    public List<ApplianceModel> getApplianceModelsByBrand(Brand brand) {
-        return applianceModelRepository.findByBrand(brand);
+        if (applianceModelList.isEmpty()){
+            throw new NotFoundException("Filter appliance model list not found");
+        }
+        return applianceModelList;
     }
 
     // Save an appliance model
     @Transactional
-    public ApplianceModel saveApplianceModel(ApplianceModel applianceModel) {
+    public ApplianceModel saveApplianceModel(@Valid ApplianceModel applianceModel) {
         return applianceModelRepository.save(applianceModel);
     }
 
     // Update an appliance model
     @Transactional
-    public ApplianceModel updateApplianceModel(ApplianceModel applianceModel) {
+    public ApplianceModel updateApplianceModel(@Valid ApplianceModel applianceModel) {
+        if (applianceModel.getId() == null) {
+            throw new IllegalArgumentException("ApplianceModel ID cannot be null for update operation");
+        }
+
+        if (!applianceModelRepository.existsById(applianceModel.getId())) {
+            throw new NotFoundException("ApplianceModel not found with ID: " + applianceModel.getId());
+        }
         return applianceModelRepository.saveAndFlush(applianceModel);
     }
 }
