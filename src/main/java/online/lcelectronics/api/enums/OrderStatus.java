@@ -8,6 +8,7 @@ public enum OrderStatus {
     QUALITY_CONTROL_TEST,
     DELIVERED,
     RE_JOINED,
-    COMPLETED
+    COMPLETED,
+    COMPLETED_NOT_REPAIRED
 }
 

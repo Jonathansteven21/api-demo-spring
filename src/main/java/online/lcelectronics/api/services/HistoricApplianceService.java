@@ -1,21 +1,28 @@
 package online.lcelectronics.api.services;
 
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import online.lcelectronics.api.entities.ApplianceModel;
 import online.lcelectronics.api.entities.HistoricAppliance;
+import online.lcelectronics.api.exceptions.NotFoundException;
+import online.lcelectronics.api.repositories.ApplianceModelRepository;
 import online.lcelectronics.api.repositories.HistoricApplianceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
+@Validated
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class HistoricApplianceService {
 
     private final HistoricApplianceRepository historicApplianceRepository;
+    private final ApplianceModelRepository applianceModelRepository;
+
 
     // Retrieve all historic appliances
     public List<HistoricAppliance> getAllHistoricAppliances() {
@@ -23,36 +30,63 @@ public class HistoricApplianceService {
     }
 
     // Retrieve a historic appliance by its exact serial number
-    public HistoricAppliance getHistoricApplianceBySerial(String serial) {
-        Optional<HistoricAppliance> optionalHistoricAppliance = historicApplianceRepository.findById(serial);
-        return optionalHistoricAppliance.orElse(null);
-    }
-
-    // Retrieve historic appliances based on a partial match of their serial numbers
-    public List<HistoricAppliance> getHistoricAppliancesBySerial(String serial) {
-        return historicApplianceRepository.findBySerialContaining(serial);
+    public HistoricAppliance getHistoricApplianceBySerial(@NotBlank(message = "Serial number cannot be null or empty") String serial) {
+        return historicApplianceRepository.findById(serial)
+                .orElseThrow(() -> new NotFoundException("Historic appliance not found with serial number: " + serial));
     }
 
     // Retrieve a historic appliance by its associated appliance model
-    public HistoricAppliance getHistoricApplianceByModel(ApplianceModel model) {
-        Optional<HistoricAppliance> optionalHistoricAppliance = historicApplianceRepository.findByModel(model);
-        return optionalHistoricAppliance.orElse(null);
+    public HistoricAppliance getHistoricApplianceByModel(@NotBlank(message = "Model name cannot be blank") String model) {
+        if (!applianceModelRepository.existsByModel(model)) {
+            throw new NotFoundException("Appliance model not found with model: " + model);
+        }
+
+        return historicApplianceRepository.findByModel(model)
+                .orElseThrow(() -> new NotFoundException("Historic appliance not found for the given appliance model: " + model));
+    }
+
+    // Retrieve historic appliances based on a partial match of their serial numbers
+    public List<HistoricAppliance> getHistoricAppliancesBySerial(@NotBlank(message = "Serial number cannot be null or empty") String serial) {
+        List<HistoricAppliance> historicAppliances = historicApplianceRepository.findBySerialContaining(serial);
+        if (historicAppliances.isEmpty()) {
+            throw new NotFoundException("Historic appliances not found with serial number containing: " + serial);
+        }
+        return historicAppliances;
     }
 
     // Retrieve historic appliances by a partial match of their associated appliance model's model name
-    public List<HistoricAppliance> getHistoricApplianceByModelContaining(String model) {
-        return historicApplianceRepository.findByModelContaining(model);
+    public List<HistoricAppliance> getHistoricApplianceByModelContaining(@NotBlank(message = "Model name cannot be blank") String model) {
+        List<HistoricAppliance> historicAppliances = historicApplianceRepository.findByModelContaining(model);
+        if (historicAppliances == null || historicAppliances.isEmpty()) {
+            throw new NotFoundException("No historic appliances found for the given model: " + model);
+        }
+        return historicAppliances;
     }
 
     // Save a historic appliance
     @Transactional
-    public HistoricAppliance saveHistoricAppliance(HistoricAppliance historicAppliance) {
+    public HistoricAppliance saveHistoricAppliance(@Valid HistoricAppliance historicAppliance) {
+        verifyApplianceModelExists(historicAppliance.getModel());
         return historicApplianceRepository.save(historicAppliance);
     }
 
     // Update a historic appliance
     @Transactional
-    public HistoricAppliance updateHistoricAppliance(HistoricAppliance historicAppliance) {
+    public HistoricAppliance updateHistoricAppliance(@Valid HistoricAppliance historicAppliance) {
+        verifyApplianceModelExists(historicAppliance.getModel());
+        if (!historicApplianceRepository.existsById(historicAppliance.getSerial())) {
+            throw new NotFoundException("Historic appliance model not found with ID: " + historicAppliance.getSerial());
+        }
+
         return historicApplianceRepository.saveAndFlush(historicAppliance);
     }
+
+    // Private method to verify if the associated ApplianceModel exists
+    private void verifyApplianceModelExists(ApplianceModel applianceModel) {
+        Integer modelId = applianceModel.getId();
+        if (modelId == null || !applianceModelRepository.existsById(modelId)) {
+            throw new NotFoundException("Appliance model not found with ID: " + modelId);
+        }
+    }
+
 }

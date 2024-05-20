@@ -1,6 +1,5 @@
 package online.lcelectronics.api.repositories;
 
-import online.lcelectronics.api.entities.ApplianceModel;
 import online.lcelectronics.api.entities.HistoricAppliance;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -14,7 +13,7 @@ public interface HistoricApplianceRepository extends JpaRepository<HistoricAppli
     List<HistoricAppliance> findBySerialContaining(String serial);
 
     // Method to find a HistoricAppliance by its associated ApplianceModel
-    Optional<HistoricAppliance> findByModel(ApplianceModel model);
+    Optional<HistoricAppliance> findByModel(String model);
 
     // Method to find HistoricAppliances by a partial match of their associated ApplianceModel's model name
     List<HistoricAppliance> findByModelContaining(String model);

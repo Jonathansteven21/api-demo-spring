@@ -1,6 +1,7 @@
 package online.lcelectronics.api.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -8,6 +9,7 @@ import online.lcelectronics.api.enums.Brand;
 import online.lcelectronics.api.enums.Component;
 import org.hibernate.annotations.CreationTimestamp;
 
+import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
@@ -24,15 +26,18 @@ public class Inventory {
     private Long id;
 
     // Serial number of the inventory item
+    @NotNull(message = "Serial cannot be null")
     private String serial;
 
     // Name or description of the inventory item
     private String name;
 
     // Quantity of new inventory items available
+    @NotEmpty(message = "quantityNew cannot be null")
     private int quantityNew;
 
     // Quantity of used inventory items available
+    @NotEmpty(message = "quantityUsed cannot be null")
     private int quantityUsed;
 
     // Location where the inventory item is stored
@@ -42,7 +47,6 @@ public class Inventory {
     private BigDecimal lastPrice;
 
     // Date when the last price was updated
-    @CreationTimestamp
     @Temporal(TemporalType.DATE)
     private Date dateLastPrice;
 
@@ -52,10 +56,12 @@ public class Inventory {
 
     // Component type of the inventory item (e.g., MAIN_BOARD, POWER_BOARD, etc.)
     @Enumerated(EnumType.STRING)
+    @NotNull(message = "Component cannot be null")
     private Component component;
 
     // Brand of the inventory item (e.g., SAMSUNG, LG, etc.)
     @Enumerated(EnumType.STRING)
+    @NotNull(message = "Brand cannot be null")
     private Brand brand;
 
     // List of images associated with the inventory item
