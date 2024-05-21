@@ -41,6 +41,6 @@ public class ApplianceModel {
     // Year when the appliance model was released
     @NotNull(message = "Year must be specified")
     @PastOrPresent(message = "Year must be in the past or present")
-    private Year year;
+    private Year manufactureYear;
 }
 

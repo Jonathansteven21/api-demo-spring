@@ -36,13 +36,12 @@ public class HistoricApplianceService {
     }
 
     // Retrieve a historic appliance by its associated appliance model
-    public HistoricAppliance getHistoricApplianceByModel(@NotBlank(message = "Model name cannot be blank") String model) {
-        if (!applianceModelRepository.existsByModel(model)) {
-            throw new NotFoundException("Appliance model not found with model: " + model);
-        }
+    public HistoricAppliance getHistoricApplianceByModel(@NotBlank(message = "Model name cannot be blank") String modelName) {
+        ApplianceModel model = applianceModelRepository.findByModel(modelName)
+                .orElseThrow(() -> new NotFoundException("Appliance model not found with model: " + modelName));
 
         return historicApplianceRepository.findByModel(model)
-                .orElseThrow(() -> new NotFoundException("Historic appliance not found for the given appliance model: " + model));
+                .orElseThrow(() -> new NotFoundException("Historic appliance not found for the given appliance model: " + modelName));
     }
 
     // Retrieve historic appliances based on a partial match of their serial numbers
@@ -55,10 +54,10 @@ public class HistoricApplianceService {
     }
 
     // Retrieve historic appliances by a partial match of their associated appliance model's model name
-    public List<HistoricAppliance> getHistoricApplianceByModelContaining(@NotBlank(message = "Model name cannot be blank") String model) {
-        List<HistoricAppliance> historicAppliances = historicApplianceRepository.findByModelContaining(model);
-        if (historicAppliances == null || historicAppliances.isEmpty()) {
-            throw new NotFoundException("No historic appliances found for the given model: " + model);
+    public List<HistoricAppliance> getHistoricApplianceByModelContaining(@NotBlank(message = "Model name cannot be blank") String modelName) {
+        List<HistoricAppliance> historicAppliances = historicApplianceRepository.findByModelNameContaining(modelName);
+        if (historicAppliances.isEmpty()) {
+            throw new NotFoundException("No historic appliances found for the given model: " + modelName);
         }
         return historicAppliances;
     }
