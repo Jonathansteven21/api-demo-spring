@@ -2,6 +2,7 @@ package online.lcelectronics.api.repositories;
 
 import online.lcelectronics.api.entities.Client;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -15,6 +16,7 @@ public interface ClientRepository extends JpaRepository<Client, Integer> {
     Optional<Client> findByPhone(int phone);
 
     // Method to find Clients by a partial match of their identity card
+    @Query("SELECT c FROM Client c WHERE CAST(c.identityCard AS string) LIKE %:identityCard%")
     List<Client> findByIdentityCardContaining(String identityCard);
 
     // Method to find Clients by a partial match of their name

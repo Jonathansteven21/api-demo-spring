@@ -23,7 +23,7 @@ public class ApplianceModelConverter {
         dto.setModel(entity.getModel());
         dto.setApplianceCategory(entity.getApplianceCategory());
         dto.setBrand(entity.getBrand());
-        dto.setYear(entity.getYear());
+        dto.setYear(entity.getManufactureYear());
         dto.setComponentList(getFilteredComponentList(entity.getApplianceCategory()));
         return dto;
     }
@@ -56,7 +56,7 @@ public class ApplianceModelConverter {
         entity.setModel(dto.getModel());
         entity.setApplianceCategory(dto.getApplianceCategory());
         entity.setBrand(dto.getBrand());
-        entity.setYear(dto.getYear());
+        entity.setManufactureYear(dto.getYear());
         return entity;
     }
 }
