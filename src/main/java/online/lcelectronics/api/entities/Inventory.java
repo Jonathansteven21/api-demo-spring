@@ -1,13 +1,11 @@
 package online.lcelectronics.api.entities;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import online.lcelectronics.api.enums.Brand;
 import online.lcelectronics.api.enums.Component;
-import org.hibernate.annotations.CreationTimestamp;
 
 import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
@@ -33,12 +31,12 @@ public class Inventory {
     private String name;
 
     // Quantity of new inventory items available
-    @NotEmpty(message = "quantityNew cannot be null")
-    private int quantityNew;
+    @NotNull(message = "quantityNew cannot be null")
+    private Integer quantityNew;
 
     // Quantity of used inventory items available
-    @NotEmpty(message = "quantityUsed cannot be null")
-    private int quantityUsed;
+    @NotNull(message = "quantityUsed cannot be null")
+    private Integer quantityUsed;
 
     // Location where the inventory item is stored
     private String location;

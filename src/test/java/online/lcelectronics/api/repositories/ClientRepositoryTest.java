@@ -34,6 +34,10 @@ class ClientRepositoryTest {
         client.setName("Test Client");
     }
 
+    /**
+     * Tests the findByPhone method of ClientRepository.
+     * Verifies that the correct Client is returned when searched by phone.
+     */
     @Test
     void whenFindByPhone_thenReturnClient() {
         when(clientRepository.findByPhone(client.getPhone()))
@@ -45,6 +49,10 @@ class ClientRepositoryTest {
         assertEquals(client.getPhone(), foundClient.get().getPhone());
     }
 
+    /**
+     * Tests the findByPhone method of ClientRepository when the phone number is not found.
+     * Ensures that an empty optional is returned when the phone number does not exist.
+     */
     @Test
     void whenPhoneNotFound_thenReturnEmpty() {
         int nonExistentPhone = 999999999;
@@ -56,6 +64,10 @@ class ClientRepositoryTest {
         assertTrue(foundClient.isEmpty());
     }
 
+    /**
+     * Tests the findByIdentityCardContaining method of ClientRepository.
+     * Verifies that the correct Client(s) are returned when searched by identity card.
+     */
     @Test
     void whenFindByIdentityCardContaining_thenReturnClients() {
         when(clientRepository.findByIdentityCardContaining(client.getIdentityCard().toString()))
@@ -67,6 +79,10 @@ class ClientRepositoryTest {
         assertEquals(client.getIdentityCard().toString(), foundClients.get(0).getIdentityCard().toString());
     }
 
+    /**
+     * Tests the findByIdentityCardContaining method of ClientRepository when the identity card is not contained.
+     * Ensures that an empty list is returned when no clients are found with the provided identity card.
+     */
     @Test
     void whenIdentityCardNotContained_thenReturnEmptyList() {
         String nonExistentIdentityCard = "999999";
@@ -78,6 +94,10 @@ class ClientRepositoryTest {
         assertTrue(foundClients.isEmpty());
     }
 
+    /**
+     * Tests the findByNameContaining method of ClientRepository.
+     * Verifies that the correct Client(s) are returned when searched by name.
+     */
     @Test
     void whenFindByNameContaining_thenReturnClients() {
         when(clientRepository.findByNameContaining(client.getName()))
@@ -89,6 +109,10 @@ class ClientRepositoryTest {
         assertEquals(client.getName(), foundClients.get(0).getName());
     }
 
+    /**
+     * Tests the findByNameContaining method of ClientRepository when the name is not contained.
+     * Ensures that an empty list is returned when no clients are found with the provided name.
+     */
     @Test
     void whenNameNotContained_thenReturnEmptyList() {
         String nonExistentName = "Non Existent Client";

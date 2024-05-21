@@ -8,7 +8,6 @@ import lombok.Setter;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 
 @Entity
 @Getter
@@ -27,7 +26,6 @@ public class Client {
 
     // Phone number of the client
     @NotNull(message = "Phone number cannot be null")
-    @Pattern(regexp = "(^$|\\d{10})", message = "Invalid phone number")
     private Integer phone;
 
     // Address of the client
