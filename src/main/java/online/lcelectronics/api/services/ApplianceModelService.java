@@ -4,7 +4,6 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
-import online.lcelectronics.api.converters.ApplianceModelConverter;
 import online.lcelectronics.api.entities.specs.ApplianceModelSpecification;
 import online.lcelectronics.api.exceptions.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +45,7 @@ public class ApplianceModelService {
     public List<ApplianceModel> getApplianceModelsByCriteria(ApplianceModel applianceModel) {
         Specification<ApplianceModel> spec = Specification.where(ApplianceModelSpecification.modelContainsIgnoreCase(applianceModel.getModel()))
                 .and(ApplianceModelSpecification.hasApplianceCategory(applianceModel.getApplianceCategory()))
-                .and(ApplianceModelSpecification.yearGreaterThanOrEqual(applianceModel.getYear()))
+                .and(ApplianceModelSpecification.yearGreaterThanOrEqual(applianceModel.getManufactureYear()))
                 .and(ApplianceModelSpecification.hasBrand(applianceModel.getBrand()));
 
         List<ApplianceModel> applianceModelList = applianceModelRepository.findAll(spec);
