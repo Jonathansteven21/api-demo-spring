@@ -39,6 +39,10 @@ class HistoricApplianceRepositoryTest {
         historicAppliance.setModel(applianceModel);
     }
 
+    /**
+     * Tests the findBySerialContaining method of HistoricApplianceRepository.
+     * Verifies that the correct HistoricAppliance(s) are returned when searched by serial.
+     */
     @Test
     void whenFindBySerialContaining_thenReturnHistoricAppliances() {
         when(historicApplianceRepository.findBySerialContaining(historicAppliance.getSerial()))
@@ -50,6 +54,10 @@ class HistoricApplianceRepositoryTest {
         assertEquals(historicAppliance.getSerial(), foundAppliances.get(0).getSerial());
     }
 
+    /**
+     * Tests the findBySerialContaining method of HistoricApplianceRepository when the serial is not contained.
+     * Ensures that an empty list is returned when no historic appliances are found with the provided serial.
+     */
     @Test
     void whenSerialNotContained_thenReturnEmptyList() {
         String nonExistentSerial = "999999";
@@ -61,6 +69,10 @@ class HistoricApplianceRepositoryTest {
         assertTrue(foundAppliances.isEmpty());
     }
 
+    /**
+     * Tests the findByModel method of HistoricApplianceRepository.
+     * Verifies that the correct HistoricAppliance is returned when searched by model.
+     */
     @Test
     void whenFindByModel_thenReturnHistoricAppliance() {
         when(historicApplianceRepository.findByModel(applianceModel))
@@ -72,6 +84,10 @@ class HistoricApplianceRepositoryTest {
         assertEquals(historicAppliance.getModel(), foundAppliance.get().getModel());
     }
 
+    /**
+     * Tests the findByModel method of HistoricApplianceRepository when the model is not found.
+     * Ensures that an empty optional is returned when the model does not exist.
+     */
     @Test
     void whenModelNotFound_thenReturnEmpty() {
         ApplianceModel nonExistentModel = new ApplianceModel();
@@ -83,6 +99,10 @@ class HistoricApplianceRepositoryTest {
         assertTrue(foundAppliance.isEmpty());
     }
 
+    /**
+     * Tests the findByModelNameContaining method of HistoricApplianceRepository.
+     * Verifies that the correct HistoricAppliance(s) are returned when searched by model name.
+     */
     @Test
     void whenFindByModelNameContaining_thenReturnHistoricAppliances() {
         when(historicApplianceRepository.findByModelNameContaining(applianceModel.getModel()))
@@ -94,6 +114,10 @@ class HistoricApplianceRepositoryTest {
         assertEquals(historicAppliance.getModel().getModel(), foundAppliances.get(0).getModel().getModel());
     }
 
+    /**
+     * Tests the findByModelNameContaining method of HistoricApplianceRepository when the model name is not contained.
+     * Ensures that an empty list is returned when no historic appliances are found with the provided model name.
+     */
     @Test
     void whenModelNameNotContained_thenReturnEmptyList() {
         String nonExistentModelName = "Non Existent Model";

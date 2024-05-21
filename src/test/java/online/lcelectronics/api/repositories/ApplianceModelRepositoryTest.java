@@ -25,11 +25,15 @@ class ApplianceModelRepositoryTest {
     private ApplianceModel applianceModel;
 
     @BeforeEach
-    void setUp() { // Removed 'public'
+    void setUp() {
         applianceModel = new ApplianceModel();
         applianceModel.setModel("Test Model");
     }
 
+    /**
+     * Tests the findByModel method of ApplianceModelRepository.
+     * Verifies that the correct ApplianceModel is returned when the model exists.
+     */
     @Test
     void whenFindByModel_thenReturnApplianceModel() {
         when(applianceModelRepository.findByModel(applianceModel.getModel()))
@@ -41,6 +45,10 @@ class ApplianceModelRepositoryTest {
         assertEquals(applianceModel.getModel(), foundModel.get().getModel());
     }
 
+    /**
+     * Tests the findByModel method of ApplianceModelRepository when the model is not found.
+     * Ensures that an empty optional is returned when the model does not exist.
+     */
     @Test
     void whenModelNotFound_thenReturnEmpty() {
         String nonExistentModel = "Non Existent Model";
@@ -52,6 +60,10 @@ class ApplianceModelRepositoryTest {
         assertFalse(foundModel.isPresent());
     }
 
+    /**
+     * Tests the existsByModel method of ApplianceModelRepository when the model exists.
+     * Verifies that true is returned when the model exists.
+     */
     @Test
     void whenExistsByModel_thenReturnTrue() {
         when(applianceModelRepository.existsByModel(applianceModel.getModel()))
@@ -62,6 +74,10 @@ class ApplianceModelRepositoryTest {
         assertTrue(exists);
     }
 
+    /**
+     * Tests the existsByModel method of ApplianceModelRepository when the model does not exist.
+     * Ensures that false is returned when the model does not exist.
+     */
     @Test
     void whenModelDoesNotExist_thenReturnFalse() {
         String nonExistentModel = "Non Existent Model";

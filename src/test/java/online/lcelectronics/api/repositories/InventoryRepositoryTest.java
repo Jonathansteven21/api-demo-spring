@@ -31,6 +31,10 @@ class InventoryRepositoryTest {
         inventory.setSerial("123456");
     }
 
+    /**
+     * Tests the findBySerial method of InventoryRepository.
+     * Verifies that the correct Inventory(s) are returned when searched by serial.
+     */
     @Test
     void whenFindBySerial_thenReturnInventories() {
         when(inventoryRepository.findBySerial(inventory.getSerial()))
@@ -42,6 +46,10 @@ class InventoryRepositoryTest {
         assertEquals(inventory.getSerial(), foundInventories.get(0).getSerial());
     }
 
+    /**
+     * Tests the findBySerial method of InventoryRepository when the serial is not contained.
+     * Ensures that an empty list is returned when no inventories are found with the provided serial.
+     */
     @Test
     void whenSerialNotContained_thenReturnEmptyList() {
         String nonExistentSerial = "999999";

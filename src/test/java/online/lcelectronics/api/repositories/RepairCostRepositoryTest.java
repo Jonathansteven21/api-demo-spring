@@ -38,6 +38,10 @@ class RepairCostRepositoryTest {
         repairCost.setAmount(new BigDecimal("100.00"));
     }
 
+    /**
+     * Tests the findByOrder method of RepairCostRepository.
+     * Verifies that the correct RepairCosts are returned when searched by order.
+     */
     @Test
     void whenFindByOrder_thenReturnRepairCosts() {
         when(repairCostRepository.findByOrder(order))
@@ -49,6 +53,10 @@ class RepairCostRepositoryTest {
         assertEquals(repairCost.getOrder(), foundCosts.get(0).getOrder());
     }
 
+    /**
+     * Tests the findByOrder method of RepairCostRepository when the order is not found.
+     * Ensures that an empty list is returned when no repair costs are found for the given order.
+     */
     @Test
     void whenOrderNotFound_thenReturnEmptyList() {
         Order nonExistentOrder = new Order();
@@ -60,6 +68,10 @@ class RepairCostRepositoryTest {
         assertTrue(foundCosts.isEmpty());
     }
 
+    /**
+     * Tests the findByAmount method of RepairCostRepository.
+     * Verifies that the correct RepairCosts are returned when searched by amount.
+     */
     @Test
     void whenFindByAmount_thenReturnRepairCosts() {
         when(repairCostRepository.findByAmount(repairCost.getAmount()))
@@ -71,6 +83,10 @@ class RepairCostRepositoryTest {
         assertEquals(repairCost.getAmount(), foundCosts.get(0).getAmount());
     }
 
+    /**
+     * Tests the findByAmount method of RepairCostRepository when the amount is not found.
+     * Ensures that an empty list is returned when no repair costs are found for the given amount.
+     */
     @Test
     void whenAmountNotFound_thenReturnEmptyList() {
         BigDecimal nonExistentAmount = new BigDecimal("9999.99");

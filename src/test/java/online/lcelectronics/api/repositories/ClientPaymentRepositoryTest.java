@@ -37,6 +37,10 @@ class ClientPaymentRepositoryTest {
         clientPayment.setDate(LocalDate.now());
     }
 
+    /**
+     * Tests the findByOrder method of ClientPaymentRepository.
+     * Verifies that the correct ClientPayment(s) are returned when associated with the given order.
+     */
     @Test
     void whenFindByOrder_thenReturnClientPayments() {
         when(clientPaymentRepository.findByOrder(order))
@@ -48,6 +52,10 @@ class ClientPaymentRepositoryTest {
         assertEquals(clientPayment.getOrder(), foundPayments.get(0).getOrder());
     }
 
+    /**
+     * Tests the findByDate method of ClientPaymentRepository.
+     * Verifies that the correct ClientPayment(s) are returned when associated with the given date.
+     */
     @Test
     void whenFindByDate_thenReturnClientPayments() {
         when(clientPaymentRepository.findByDate(clientPayment.getDate()))
@@ -59,6 +67,10 @@ class ClientPaymentRepositoryTest {
         assertEquals(clientPayment.getDate(), foundPayments.get(0).getDate());
     }
 
+    /**
+     * Tests the findByOrder method of ClientPaymentRepository when the order is not found.
+     * Ensures that an empty list is returned when the order does not exist.
+     */
     @Test
     void whenOrderNotFound_thenReturnEmptyList() {
         Order nonExistentOrder = new Order();
@@ -70,6 +82,10 @@ class ClientPaymentRepositoryTest {
         assertTrue(foundPayments.isEmpty());
     }
 
+    /**
+     * Tests the findByDate method of ClientPaymentRepository when the date is not found.
+     * Ensures that an empty list is returned when there are no payments for the given date.
+     */
     @Test
     void whenDateNotFound_thenReturnEmptyList() {
         LocalDate nonExistentDate = LocalDate.of(2050, 1, 1);

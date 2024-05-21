@@ -36,6 +36,10 @@ class OrderHistoryRepositoryTest {
         orderHistory.setOrder(order);
     }
 
+    /**
+     * Tests the findByOrder method of OrderHistoryRepository.
+     * Verifies that the correct OrderHistories are returned when searched by order.
+     */
     @Test
     void whenFindByOrder_thenReturnOrderHistories() {
         when(orderHistoryRepository.findByOrder(order))
@@ -47,6 +51,10 @@ class OrderHistoryRepositoryTest {
         assertEquals(orderHistory.getOrder(), foundHistories.get(0).getOrder());
     }
 
+    /**
+     * Tests the findByOrder method of OrderHistoryRepository when the order is not found.
+     * Ensures that an empty list is returned when no order histories are found for the given order.
+     */
     @Test
     void whenOrderNotFound_thenReturnEmptyList() {
         Order nonExistentOrder = new Order();
