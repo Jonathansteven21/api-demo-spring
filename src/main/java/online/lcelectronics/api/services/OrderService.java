@@ -51,8 +51,8 @@ public class OrderService {
     // Returns a list of orders that match the specified criteria.
     public List<Order> getOrdersByCriteria(Order order) {
         Specification<Order> spec = Specification.where(OrderSpecification.idContains(String.valueOf(order.getId())))
-                .and(StringUtils.hasText(String.valueOf(order.getClient().getIdentityCard())) ? OrderSpecification.hasClient(order.getClient().getIdentityCard()) : null)
-                .and(StringUtils.hasText(order.getHistoricAppliance().getSerial()) ? OrderSpecification.hasHistoricAppliance(order.getHistoricAppliance().getSerial()) : null)
+                .and(OrderSpecification.hasClient(order.getClient() != null ? order.getClient().getIdentityCard() : null))
+                .and(OrderSpecification.hasHistoricAppliance(order.getHistoricAppliance() != null ? order.getHistoricAppliance().getSerial() : null))
                 .and(OrderSpecification.hasStatus(order.getStatus()));
 
         List<Order> orderList = orderRepository.findAll(spec);
