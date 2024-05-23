@@ -68,7 +68,7 @@ public class ClientController {
 
     // Update an existing client
     @PutMapping("/{identityCard}")
-    public ResponseEntity<ApiResponse<Client>> updateClient(@PathVariable Integer identityCard, @RequestBody Client client) {
+    public ResponseEntity<ApiResponse<Client>> updateClient(@PathVariable Long identityCard, @RequestBody Client client) {
         if (!identityCard.equals(client.getIdentityCard())) {
             throw new IllegalArgumentException("Identity card in path does not match the one in the request body");
         }
