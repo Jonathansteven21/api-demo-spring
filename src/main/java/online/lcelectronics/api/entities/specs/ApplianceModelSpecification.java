@@ -25,7 +25,7 @@ public class ApplianceModelSpecification {
 
     // Creates a specification to filter ApplianceModel entities by year greater than or equal to the specified year.
     public static Specification<ApplianceModel> yearGreaterThanOrEqual(Year year) {
-        return (root, query, cb) -> year == null ? null : cb.greaterThanOrEqualTo(root.get("year"), year);
+        return (root, query, cb) -> year == null ? null : cb.greaterThanOrEqualTo(root.get("manufactureYear"), year.getValue());
     }
 
     // Creates a specification to filter ApplianceModel entities by brand.

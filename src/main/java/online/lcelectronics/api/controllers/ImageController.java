@@ -1,5 +1,6 @@
 package online.lcelectronics.api.controllers;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import online.lcelectronics.api.entities.Image;
 import online.lcelectronics.api.services.ImageService;
@@ -36,7 +37,8 @@ public class ImageController {
 
     // Save a new image
     @PostMapping
-    public ResponseEntity<ApiResponse<Image>> saveImage(@RequestBody Image image) {
+    public ResponseEntity<ApiResponse<Image>> saveImage(@Valid @RequestBody Image image) {
+        image.setId(null);
         Image savedImage = imageService.saveImage(image);
         ApiResponse<Image> response = new ApiResponse<>(HttpStatus.CREATED.value(), "Image saved", savedImage);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
@@ -44,7 +46,7 @@ public class ImageController {
 
     // Update an existing image
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<Image>> updateImage(@PathVariable Integer id, @RequestBody Image image) {
+    public ResponseEntity<ApiResponse<Image>> updateImage(@Valid @PathVariable Integer id, @RequestBody Image image) {
         if (!id.equals(image.getId())) {
             throw new IllegalArgumentException("ID in path does not match the one in the request body");
         }

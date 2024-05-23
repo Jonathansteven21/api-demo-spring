@@ -58,7 +58,7 @@ public class ClientService {
 
     // Save a new client
     @Transactional
-    public Client saveClient(@Valid Client client) {
+    public Client saveClient(Client client) {
         Long identityCard = client.getIdentityCard();
         if (clientRepository.existsById(identityCard)) {
             throw new IllegalArgumentException("Client with identity card " + identityCard + " already exists");
@@ -68,7 +68,7 @@ public class ClientService {
 
     // Update an existing client
     @Transactional
-    public Client updateClient(@Valid Client client) {
+    public Client updateClient(Client client) {
         if (!clientRepository.existsById(client.getIdentityCard())) {
             throw new NotFoundException("Client not found with Identity card: " + client.getIdentityCard());
         }

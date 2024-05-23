@@ -1,5 +1,6 @@
 package online.lcelectronics.api.controllers;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import online.lcelectronics.api.entities.Client;
 import online.lcelectronics.api.responses.ApiResponse;
@@ -51,7 +52,7 @@ public class ClientController {
     }
 
     // Get clients whose identity card contains the specified string
-    @GetMapping("/identityCard/{identityCard}")
+    @GetMapping("/identity-card/{identityCard}")
     public ResponseEntity<ApiResponse<List<Client>>> getClientsByIdentityCard(@PathVariable String identityCard) {
         List<Client> clients = clientService.getClientsByIdentityCard(identityCard);
         ApiResponse<List<Client>> response = new ApiResponse<>(HttpStatus.OK.value(), "Clients found", clients);
@@ -60,7 +61,7 @@ public class ClientController {
 
     // Create a new client
     @PostMapping
-    public ResponseEntity<ApiResponse<Client>> createClient(@RequestBody Client client) {
+    public ResponseEntity<ApiResponse<Client>> createClient(@Valid @RequestBody Client client) {
         Client createdClient = clientService.saveClient(client);
         ApiResponse<Client> response = new ApiResponse<>(HttpStatus.CREATED.value(), "Client created", createdClient);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
@@ -68,7 +69,7 @@ public class ClientController {
 
     // Update an existing client
     @PutMapping("/{identityCard}")
-    public ResponseEntity<ApiResponse<Client>> updateClient(@PathVariable Long identityCard, @RequestBody Client client) {
+    public ResponseEntity<ApiResponse<Client>> updateClient(@Valid @PathVariable Long identityCard, @RequestBody Client client) {
         if (!identityCard.equals(client.getIdentityCard())) {
             throw new IllegalArgumentException("Identity card in path does not match the one in the request body");
         }

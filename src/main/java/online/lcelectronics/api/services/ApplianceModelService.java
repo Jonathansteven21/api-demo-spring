@@ -1,6 +1,5 @@
 package online.lcelectronics.api.services;
 
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
@@ -58,13 +57,13 @@ public class ApplianceModelService {
 
     // Save an appliance model
     @Transactional
-    public ApplianceModel saveApplianceModel(@Valid ApplianceModel applianceModel) {
+    public ApplianceModel saveApplianceModel(ApplianceModel applianceModel) {
         return applianceModelRepository.save(applianceModel);
     }
 
     // Update an appliance model
     @Transactional
-    public ApplianceModel updateApplianceModel(@Valid ApplianceModel applianceModel) {
+    public ApplianceModel updateApplianceModel(ApplianceModel applianceModel) {
         if (applianceModel.getId() == null) {
             throw new IllegalArgumentException("ApplianceModel ID cannot be null for update operation");
         }
