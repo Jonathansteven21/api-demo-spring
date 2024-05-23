@@ -20,7 +20,7 @@ public class OrderSpecification {
 
 
     // Creates a specification to filter orders by client's identity card.
-    public static Specification<Order> hasClient(Integer identityCard) {
+    public static Specification<Order> hasClient(Long identityCard) {
         return (root, query, cb) -> identityCard == null ? null : cb.equal(root.get("client").get("identityCard"), identityCard);
     }
 
