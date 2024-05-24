@@ -1,5 +1,7 @@
 package online.lcelectronics.api.controllers;
 
+import online.lcelectronics.api.converters.ApplianceModelConverter;
+import online.lcelectronics.api.dto.ApplianceModelDTO;
 import online.lcelectronics.api.entities.ApplianceModel;
 import online.lcelectronics.api.enums.ApplianceCategory;
 import online.lcelectronics.api.enums.Brand;
@@ -15,7 +17,9 @@ import org.springframework.http.ResponseEntity;
 
 import java.time.Year;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
@@ -26,6 +30,9 @@ class ApplianceModelControllerTest {
     @Mock
     ApplianceModelService applianceModelService;
 
+    @Mock
+    ApplianceModelConverter applianceModelConverter;
+
     @InjectMocks
     ApplianceModelController applianceModelController;
 
@@ -35,18 +42,26 @@ class ApplianceModelControllerTest {
      */
     @Test
     void getAllApplianceModels() {
-        List<ApplianceModel> applianceModels = new ArrayList<>();
-        applianceModels.add(new ApplianceModel());
-        applianceModels.add(new ApplianceModel());
+        List<ApplianceModelDTO> applianceModelDTOs = new ArrayList<>();
+        applianceModelDTOs.add(new ApplianceModelDTO());
+        applianceModelDTOs.add(new ApplianceModelDTO());
+
+        List<ApplianceModel> applianceModels = applianceModelDTOs.stream()
+                .map(dto -> {
+                    ApplianceModel model = new ApplianceModel();
+                    return model;
+                })
+                .collect(Collectors.toList());
 
         when(applianceModelService.getAllApplianceModels()).thenReturn(applianceModels);
+        when(applianceModelConverter.toDto(any(ApplianceModel.class))).thenReturn(applianceModelDTOs.get(0));
 
-        ResponseEntity<ApiResponse<List<ApplianceModel>>> responseEntity = applianceModelController.getAllApplianceModels();
+        ResponseEntity<ApiResponse<List<ApplianceModelDTO>>> responseEntity = applianceModelController.getAllApplianceModels();
 
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals(HttpStatus.OK.value(), responseEntity.getBody().getStatus());
         assertEquals("Appliance models found", responseEntity.getBody().getMessage());
-        assertEquals(applianceModels, responseEntity.getBody().getData());
+        assertEquals(applianceModelDTOs, responseEntity.getBody().getData());
     }
 
     /**
@@ -55,17 +70,20 @@ class ApplianceModelControllerTest {
      */
     @Test
     void getApplianceModelById() {
+        ApplianceModelDTO applianceModelDTO = new ApplianceModelDTO();
+        applianceModelDTO.setId(1);
         ApplianceModel applianceModel = new ApplianceModel();
         applianceModel.setId(1);
 
         when(applianceModelService.getApplianceModelById(1)).thenReturn(applianceModel);
+        when(applianceModelConverter.toDto(applianceModel)).thenReturn(applianceModelDTO);
 
-        ResponseEntity<ApiResponse<ApplianceModel>> responseEntity = applianceModelController.getApplianceModelById(1);
+        ResponseEntity<ApiResponse<ApplianceModelDTO>> responseEntity = applianceModelController.getApplianceModelById(1);
 
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals(HttpStatus.OK.value(), responseEntity.getBody().getStatus());
         assertEquals("Appliance model found", responseEntity.getBody().getMessage());
-        assertEquals(applianceModel, responseEntity.getBody().getData());
+        assertEquals(applianceModelDTO, responseEntity.getBody().getData());
     }
 
     /**
@@ -74,17 +92,20 @@ class ApplianceModelControllerTest {
      */
     @Test
     void getApplianceModelByModel() {
+        ApplianceModelDTO applianceModelDTO = new ApplianceModelDTO();
+        applianceModelDTO.setModel("TestModel");
         ApplianceModel applianceModel = new ApplianceModel();
         applianceModel.setModel("TestModel");
 
-        when(applianceModelService.getApplianceModelByModel("TestModel")).thenReturn(applianceModel);
+        when(applianceModelService.getApplianceModelByModel("TestModel")).thenReturn(Collections.singletonList(applianceModel));
+        when(applianceModelConverter.toDto(applianceModel)).thenReturn(applianceModelDTO);
 
-        ResponseEntity<ApiResponse<ApplianceModel>> responseEntity = applianceModelController.getApplianceModelByModel("TestModel");
+        ResponseEntity<ApiResponse<List<ApplianceModelDTO>>> responseEntity = applianceModelController.getApplianceModelByModel("TestModel");
 
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals(HttpStatus.OK.value(), responseEntity.getBody().getStatus());
-        assertEquals("Appliance model found", responseEntity.getBody().getMessage());
-        assertEquals(applianceModel, responseEntity.getBody().getData());
+        assertEquals("Appliance models found", responseEntity.getBody().getMessage());
+        assertEquals(Collections.singletonList(applianceModelDTO), responseEntity.getBody().getData());
     }
 
     /**
@@ -93,20 +114,29 @@ class ApplianceModelControllerTest {
      */
     @Test
     void getApplianceModelsByCriteria() {
+        ApplianceModelDTO applianceModelDTO = new ApplianceModelDTO();
+        applianceModelDTO.setModel("TestModel");
         ApplianceModel applianceModel = new ApplianceModel();
         applianceModel.setModel("TestModel");
 
-        List<ApplianceModel> applianceModels = new ArrayList<>();
-        applianceModels.add(applianceModel);
+        List<ApplianceModelDTO> applianceModelDTOs = Collections.singletonList(applianceModelDTO);
+        List<ApplianceModel> applianceModels = applianceModelDTOs.stream()
+                .map(dto -> {
+                    ApplianceModel model = new ApplianceModel();
+                    // Populate model fields from dto as needed
+                    return model;
+                })
+                .collect(Collectors.toList());
 
         when(applianceModelService.getApplianceModelsByCriteria(any(ApplianceModel.class))).thenReturn(applianceModels);
+        when(applianceModelConverter.toDto(any(ApplianceModel.class))).thenReturn(applianceModelDTO);
 
-        ResponseEntity<ApiResponse<List<ApplianceModel>>> responseEntity = applianceModelController.getApplianceModelsByCriteria("TestModel", ApplianceCategory.TV, Brand.SAMSUNG, Year.of(2020));
+        ResponseEntity<ApiResponse<List<ApplianceModelDTO>>> responseEntity = applianceModelController.getApplianceModelsByCriteria("TestModel", ApplianceCategory.TV, Brand.SAMSUNG, Year.of(2020));
 
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals(HttpStatus.OK.value(), responseEntity.getBody().getStatus());
         assertEquals("Appliance models found", responseEntity.getBody().getMessage());
-        assertEquals(applianceModels, responseEntity.getBody().getData());
+        assertEquals(applianceModelDTOs, responseEntity.getBody().getData());
     }
 
     /**
@@ -115,17 +145,25 @@ class ApplianceModelControllerTest {
      */
     @Test
     void createApplianceModel() {
+        ApplianceModelDTO applianceModelDTO = new ApplianceModelDTO();
+        applianceModelDTO.setModel("TestModel");
         ApplianceModel applianceModel = new ApplianceModel();
         applianceModel.setModel("TestModel");
 
         when(applianceModelService.saveApplianceModel(applianceModel)).thenReturn(applianceModel);
+        when(applianceModelConverter.toDto(applianceModel)).thenReturn(applianceModelDTO);
 
-        ResponseEntity<ApiResponse<ApplianceModel>> responseEntity = applianceModelController.createApplianceModel(applianceModel);
+        ResponseEntity<ApiResponse<ApplianceModelDTO>> expectedResponseEntity = new ResponseEntity<>(
+                new ApiResponse<>(HttpStatus.CREATED.value(), "Appliance model created", applianceModelDTO),
+                HttpStatus.CREATED
+        );
+
+        ResponseEntity<ApiResponse<ApplianceModelDTO>> responseEntity = applianceModelController.createApplianceModel(applianceModel);
 
         assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
         assertEquals(HttpStatus.CREATED.value(), responseEntity.getBody().getStatus());
         assertEquals("Appliance model created", responseEntity.getBody().getMessage());
-        assertEquals(applianceModel, responseEntity.getBody().getData());
+        assertEquals(applianceModelDTO, responseEntity.getBody().getData());
     }
 
     /**
@@ -134,17 +172,26 @@ class ApplianceModelControllerTest {
      */
     @Test
     void updateApplianceModel() {
+        ApplianceModelDTO applianceModelDTO = new ApplianceModelDTO();
+        applianceModelDTO.setId(1);
+        applianceModelDTO.setModel("UpdatedModel");
         ApplianceModel applianceModel = new ApplianceModel();
         applianceModel.setId(1);
         applianceModel.setModel("UpdatedModel");
 
         when(applianceModelService.updateApplianceModel(applianceModel)).thenReturn(applianceModel);
+        when(applianceModelConverter.toDto(applianceModel)).thenReturn(applianceModelDTO);
 
-        ResponseEntity<ApiResponse<ApplianceModel>> responseEntity = applianceModelController.updateApplianceModel(1, applianceModel);
+        ResponseEntity<ApiResponse<ApplianceModelDTO>> expectedResponseEntity = new ResponseEntity<>(
+                new ApiResponse<>(HttpStatus.OK.value(), "Appliance model updated", applianceModelDTO),
+                HttpStatus.OK
+        );
+
+        ResponseEntity<ApiResponse<ApplianceModelDTO>> responseEntity = applianceModelController.updateApplianceModel(1, applianceModel);
 
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals(HttpStatus.OK.value(), responseEntity.getBody().getStatus());
         assertEquals("Appliance model updated", responseEntity.getBody().getMessage());
-        assertEquals(applianceModel, responseEntity.getBody().getData());
+        assertEquals(applianceModelDTO, responseEntity.getBody().getData());
     }
 }

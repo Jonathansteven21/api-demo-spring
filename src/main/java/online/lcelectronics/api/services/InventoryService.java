@@ -71,14 +71,14 @@ public class InventoryService {
 
     // Save an inventory item
     @Transactional
-    public Inventory saveInventoryItem(@Valid Inventory inventoryItem) {
+    public Inventory saveInventoryItem(Inventory inventoryItem) {
         validateInventoryItem(inventoryItem);
         return inventoryRepository.save(inventoryItem);
     }
 
     // Update an inventory item
     @Transactional
-    public Inventory updateInventoryItem(@Valid Inventory inventoryItem) {
+    public Inventory updateInventoryItem(Inventory inventoryItem) {
         validateInventoryItem(inventoryItem);
         if (!inventoryRepository.existsById(inventoryItem.getId())) {
             throw new NotFoundException("Inventory item not found with ID: " + inventoryItem.getId());

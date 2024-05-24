@@ -2,6 +2,8 @@ package online.lcelectronics.api.controllers;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import online.lcelectronics.api.converters.ApplianceModelConverter;
+import online.lcelectronics.api.dto.ApplianceModelDTO;
 import online.lcelectronics.api.entities.ApplianceModel;
 import online.lcelectronics.api.enums.ApplianceCategory;
 import online.lcelectronics.api.enums.Brand;
@@ -10,45 +12,54 @@ import online.lcelectronics.api.util.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Year;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/appliance-models")
+@Validated
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class ApplianceModelController {
 
     private final ApplianceModelService applianceModelService;
+    private final ApplianceModelConverter applianceModelConverter;
 
     // Get all appliance models
     @GetMapping
-    public ResponseEntity<ApiResponse<List<ApplianceModel>>> getAllApplianceModels() {
+    public ResponseEntity<ApiResponse<List<ApplianceModelDTO>>> getAllApplianceModels() {
         List<ApplianceModel> applianceModels = applianceModelService.getAllApplianceModels();
-        ApiResponse<List<ApplianceModel>> response = new ApiResponse<>(HttpStatus.OK.value(), "Appliance models found", applianceModels);
+        List<ApplianceModelDTO> applianceModelDTOs = applianceModels.stream()
+                .map(applianceModelConverter::toDto).toList();
+        ApiResponse<List<ApplianceModelDTO>> response = new ApiResponse<>(HttpStatus.OK.value(), "Appliance models found", applianceModelDTOs);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     // Get an appliance model by its ID
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<ApplianceModel>> getApplianceModelById(@PathVariable Integer id) {
+    public ResponseEntity<ApiResponse<ApplianceModelDTO>> getApplianceModelById(@PathVariable Integer id) {
         ApplianceModel applianceModel = applianceModelService.getApplianceModelById(id);
-        ApiResponse<ApplianceModel> response = new ApiResponse<>(HttpStatus.OK.value(), "Appliance model found", applianceModel);
+        ApplianceModelDTO applianceModelDTO = applianceModelConverter.toDto(applianceModel);
+        ApiResponse<ApplianceModelDTO> response = new ApiResponse<>(HttpStatus.OK.value(), "Appliance model found", applianceModelDTO);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     // Get an appliance model by its model
     @GetMapping("/model/{model}")
-    public ResponseEntity<ApiResponse<ApplianceModel>> getApplianceModelByModel(@PathVariable String model) {
-        ApplianceModel applianceModel = applianceModelService.getApplianceModelByModel(model);
-        ApiResponse<ApplianceModel> response = new ApiResponse<>(HttpStatus.OK.value(), "Appliance model found", applianceModel);
+    public ResponseEntity<ApiResponse<List<ApplianceModelDTO>>> getApplianceModelByModel(@PathVariable String model) {
+        List<ApplianceModel> applianceModels = applianceModelService.getApplianceModelByModel(model);
+        List<ApplianceModelDTO> applianceModelDTOs = applianceModels.stream()
+                .map(applianceModelConverter::toDto).toList();
+        ApiResponse<List<ApplianceModelDTO>> response = new ApiResponse<>(HttpStatus.OK.value(), "Appliance models found", applianceModelDTOs);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     // Get appliance models by criteria
     @GetMapping("/search")
-    public ResponseEntity<ApiResponse<List<ApplianceModel>>> getApplianceModelsByCriteria(
+    public ResponseEntity<ApiResponse<List<ApplianceModelDTO>>> getApplianceModelsByCriteria(
             @RequestParam(required = false) String model,
             @RequestParam(required = false) ApplianceCategory applianceCategory,
             @RequestParam(required = false) Brand brand,
@@ -61,28 +72,32 @@ public class ApplianceModelController {
         searchCriteria.setManufactureYear(manufactureYear);
 
         List<ApplianceModel> applianceModels = applianceModelService.getApplianceModelsByCriteria(searchCriteria);
-        ApiResponse<List<ApplianceModel>> response = new ApiResponse<>(HttpStatus.OK.value(), "Appliance models found", applianceModels);
+        List<ApplianceModelDTO> applianceModelDTOs = applianceModels.stream()
+                .map(applianceModelConverter::toDto)
+                .toList();
+        ApiResponse<List<ApplianceModelDTO>> response = new ApiResponse<>(HttpStatus.OK.value(), "Appliance models found", applianceModelDTOs);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-
     // Create a new appliance model
     @PostMapping
-    public ResponseEntity<ApiResponse<ApplianceModel>> createApplianceModel(@Valid @RequestBody ApplianceModel applianceModel) {
+    public ResponseEntity<ApiResponse<ApplianceModelDTO>> createApplianceModel(@Valid @RequestBody ApplianceModel applianceModel) {
         applianceModel.setId(null);
         ApplianceModel savedApplianceModel = applianceModelService.saveApplianceModel(applianceModel);
-        ApiResponse<ApplianceModel> response = new ApiResponse<>(HttpStatus.CREATED.value(), "Appliance model created", savedApplianceModel);
+        ApplianceModelDTO savedApplianceModelDTO = applianceModelConverter.toDto(savedApplianceModel);
+        ApiResponse<ApplianceModelDTO> response = new ApiResponse<>(HttpStatus.CREATED.value(), "Appliance model created", savedApplianceModelDTO);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    // Update an existing appliance model
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<ApplianceModel>> updateApplianceModel(@Valid @PathVariable Integer id, @RequestBody ApplianceModel applianceModel) {
+    public ResponseEntity<ApiResponse<ApplianceModelDTO>> updateApplianceModel(@Valid @PathVariable Integer id, @RequestBody ApplianceModel applianceModel) {
         if (!id.equals(applianceModel.getId())) {
             throw new IllegalArgumentException("ID in path does not match the one in the request body");
         }
         ApplianceModel updatedApplianceModel = applianceModelService.updateApplianceModel(applianceModel);
-        ApiResponse<ApplianceModel> response = new ApiResponse<>(HttpStatus.OK.value(), "Appliance model updated", updatedApplianceModel);
+        ApplianceModelDTO updatedApplianceModelDTO = applianceModelConverter.toDto(updatedApplianceModel);
+        ApiResponse<ApplianceModelDTO> response = new ApiResponse<>(HttpStatus.OK.value(), "Appliance model updated", updatedApplianceModelDTO);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
 }

@@ -12,9 +12,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -32,11 +30,10 @@ class HistoricApplianceServiceTest {
     private HistoricApplianceService historicApplianceService;
 
     private HistoricAppliance historicAppliance;
-    private ApplianceModel applianceModel;
 
     @BeforeEach
     void setUp() {
-        applianceModel = new ApplianceModel();
+        ApplianceModel applianceModel = new ApplianceModel();
         applianceModel.setId(1);
         applianceModel.setModel("Model A");
 
@@ -89,12 +86,15 @@ class HistoricApplianceServiceTest {
      */
     @Test
     void getHistoricApplianceByModel_existingModel() {
-        when(applianceModelRepository.findByModel("Model A")).thenReturn(Optional.of(applianceModel));
-        List<HistoricAppliance> historicAppliances = new ArrayList<>();
-        historicAppliances.add(historicAppliance);
+        ApplianceModel applianceModel = new ApplianceModel();
+        applianceModel.setModel("Model A");
+        when(applianceModelRepository.findByModel("Model A")).thenReturn(Collections.singletonList(applianceModel));
+        HistoricAppliance historicAppliance = new HistoricAppliance();
+        List<HistoricAppliance> historicAppliances = Collections.singletonList(historicAppliance);
         when(historicApplianceRepository.findByModel(applianceModel)).thenReturn(historicAppliances);
 
         List<HistoricAppliance> result = historicApplianceService.getHistoricApplianceByModel("Model A");
+
         assertEquals(historicAppliances, result);
     }
 
@@ -104,7 +104,7 @@ class HistoricApplianceServiceTest {
      */
     @Test
     void getHistoricApplianceByModel_nonExistingModel() {
-        when(applianceModelRepository.findByModel("Model A")).thenReturn(Optional.empty());
+        when(applianceModelRepository.findByModel("Model A")).thenReturn(new ArrayList<>());
 
         assertThrows(NotFoundException.class, () -> historicApplianceService.getHistoricApplianceByModel("Model A"));
     }

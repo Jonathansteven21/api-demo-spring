@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,17 +37,23 @@ public class HistoricApplianceService {
                 .orElseThrow(() -> new NotFoundException("Historic appliance not found with serial number: " + serial));
     }
 
-    // Retrieve a historic appliance by its associated appliance model
+    // Retrieve historic appliances by their associated appliance models
     public List<HistoricAppliance> getHistoricApplianceByModel(@NotBlank(message = "Model name cannot be blank") String modelName) {
-        ApplianceModel model = applianceModelRepository.findByModel(modelName)
-                .orElseThrow(() -> new NotFoundException("Appliance model not found with model: " + modelName));
+        List<ApplianceModel> models = applianceModelRepository.findByModel(modelName);
+        if (models.isEmpty()) {
+            throw new NotFoundException("Appliance models not found with model: " + modelName);
+        }
+        List<HistoricAppliance> mergedHistoricAppliances = new ArrayList<>();
+        for (ApplianceModel model : models) {
+            List<HistoricAppliance> historicAppliances = historicApplianceRepository.findByModel(model);
+            mergedHistoricAppliances.addAll(historicAppliances);
+        }
 
-        List<HistoricAppliance> historicAppliances = historicApplianceRepository.findByModel(model);
-        if (historicAppliances.isEmpty()) {
+        if (mergedHistoricAppliances.isEmpty()) {
             throw new NotFoundException("Historic appliances not found for the given appliance model: " + modelName);
         }
 
-        return historicAppliances;
+        return mergedHistoricAppliances;
     }
 
     // Retrieve historic appliances based on a partial match of their serial numbers

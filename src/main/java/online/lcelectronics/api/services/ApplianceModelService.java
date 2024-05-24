@@ -35,9 +35,12 @@ public class ApplianceModelService {
     }
 
     // Retrieve an appliance model by its model
-    public ApplianceModel getApplianceModelByModel(@NotEmpty(message = "Model cannot be null or empty") String model) throws NotFoundException {
-        return applianceModelRepository.findByModel(model)
-                .orElseThrow(() -> new NotFoundException("Appliance model not found with model: " + model));
+    public List<ApplianceModel> getApplianceModelByModel(@NotEmpty(message = "Model cannot be null or empty") String model) throws NotFoundException {
+        List<ApplianceModel> applianceModels = applianceModelRepository.findByModel(model);
+        if (applianceModels.isEmpty()) {
+            throw new NotFoundException("Appliance model not found with model: " + model);
+        }
+        return applianceModels;
     }
 
     // Retrieve appliance models based on specified criteria.
