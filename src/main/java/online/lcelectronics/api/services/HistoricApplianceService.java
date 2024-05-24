@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Validated
@@ -36,12 +37,16 @@ public class HistoricApplianceService {
     }
 
     // Retrieve a historic appliance by its associated appliance model
-    public HistoricAppliance getHistoricApplianceByModel(@NotBlank(message = "Model name cannot be blank") String modelName) {
+    public List<HistoricAppliance> getHistoricApplianceByModel(@NotBlank(message = "Model name cannot be blank") String modelName) {
         ApplianceModel model = applianceModelRepository.findByModel(modelName)
                 .orElseThrow(() -> new NotFoundException("Appliance model not found with model: " + modelName));
 
-        return historicApplianceRepository.findByModel(model)
-                .orElseThrow(() -> new NotFoundException("Historic appliance not found for the given appliance model: " + modelName));
+        List<HistoricAppliance> historicAppliances = historicApplianceRepository.findByModel(model);
+        if (historicAppliances.isEmpty()) {
+            throw new NotFoundException("Historic appliances not found for the given appliance model: " + modelName);
+        }
+
+        return historicAppliances;
     }
 
     // Retrieve historic appliances based on a partial match of their serial numbers
@@ -64,14 +69,14 @@ public class HistoricApplianceService {
 
     // Save a historic appliance
     @Transactional
-    public HistoricAppliance saveHistoricAppliance(@Valid HistoricAppliance historicAppliance) {
+    public HistoricAppliance saveHistoricAppliance(HistoricAppliance historicAppliance) {
         verifyApplianceModelExists(historicAppliance.getModel());
         return historicApplianceRepository.save(historicAppliance);
     }
 
     // Update a historic appliance
     @Transactional
-    public HistoricAppliance updateHistoricAppliance(@Valid HistoricAppliance historicAppliance) {
+    public HistoricAppliance updateHistoricAppliance(HistoricAppliance historicAppliance) {
         verifyApplianceModelExists(historicAppliance.getModel());
         if (!historicApplianceRepository.existsById(historicAppliance.getSerial())) {
             throw new NotFoundException("Historic appliance model not found with ID: " + historicAppliance.getSerial());

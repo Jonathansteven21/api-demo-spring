@@ -4,7 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import online.lcelectronics.api.entities.Image;
 import online.lcelectronics.api.services.ImageService;
-import online.lcelectronics.api.responses.ApiResponse;
+import online.lcelectronics.api.util.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

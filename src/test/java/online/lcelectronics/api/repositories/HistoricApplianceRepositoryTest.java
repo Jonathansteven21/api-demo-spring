@@ -12,7 +12,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -76,12 +75,12 @@ class HistoricApplianceRepositoryTest {
     @Test
     void whenFindByModel_thenReturnHistoricAppliance() {
         when(historicApplianceRepository.findByModel(applianceModel))
-                .thenReturn(Optional.of(historicAppliance));
+                .thenReturn(Collections.singletonList(historicAppliance));
 
-        Optional<HistoricAppliance> foundAppliance = historicApplianceRepository.findByModel(applianceModel);
+        List<HistoricAppliance> foundAppliances = historicApplianceRepository.findByModel(applianceModel);
 
-        assertTrue(foundAppliance.isPresent());
-        assertEquals(historicAppliance.getModel(), foundAppliance.get().getModel());
+        assertFalse(foundAppliances.isEmpty());
+        assertEquals(historicAppliance.getModel(), foundAppliances.get(0).getModel());
     }
 
     /**
@@ -92,11 +91,11 @@ class HistoricApplianceRepositoryTest {
     void whenModelNotFound_thenReturnEmpty() {
         ApplianceModel nonExistentModel = new ApplianceModel();
         when(historicApplianceRepository.findByModel(nonExistentModel))
-                .thenReturn(Optional.empty());
+                .thenReturn(Collections.emptyList());
 
-        Optional<HistoricAppliance> foundAppliance = historicApplianceRepository.findByModel(nonExistentModel);
+        List<HistoricAppliance> foundAppliances = historicApplianceRepository.findByModel(nonExistentModel);
 
-        assertTrue(foundAppliance.isEmpty());
+        assertTrue(foundAppliances.isEmpty());
     }
 
     /**

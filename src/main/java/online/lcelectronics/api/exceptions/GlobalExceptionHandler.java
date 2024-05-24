@@ -1,6 +1,6 @@
 package online.lcelectronics.api.exceptions;
 
-import online.lcelectronics.api.responses.ApiResponse;
+import online.lcelectronics.api.util.ApiResponse;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;

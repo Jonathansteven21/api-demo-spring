@@ -3,7 +3,7 @@ package online.lcelectronics.api.controllers;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import online.lcelectronics.api.entities.Client;
-import online.lcelectronics.api.responses.ApiResponse;
+import online.lcelectronics.api.util.ApiResponse;
 import online.lcelectronics.api.services.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

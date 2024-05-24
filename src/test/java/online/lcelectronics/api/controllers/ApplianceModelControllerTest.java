@@ -3,7 +3,7 @@ package online.lcelectronics.api.controllers;
 import online.lcelectronics.api.entities.ApplianceModel;
 import online.lcelectronics.api.enums.ApplianceCategory;
 import online.lcelectronics.api.enums.Brand;
-import online.lcelectronics.api.responses.ApiResponse;
+import online.lcelectronics.api.util.ApiResponse;
 import online.lcelectronics.api.services.ApplianceModelService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

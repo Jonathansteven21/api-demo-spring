@@ -6,7 +6,7 @@ import online.lcelectronics.api.entities.ApplianceModel;
 import online.lcelectronics.api.enums.ApplianceCategory;
 import online.lcelectronics.api.enums.Brand;
 import online.lcelectronics.api.services.ApplianceModelService;
-import online.lcelectronics.api.responses.ApiResponse;
+import online.lcelectronics.api.util.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

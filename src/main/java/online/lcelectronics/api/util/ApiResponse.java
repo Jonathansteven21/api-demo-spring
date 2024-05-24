@@ -1,4 +1,4 @@
-package online.lcelectronics.api.responses;
+package online.lcelectronics.api.util;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

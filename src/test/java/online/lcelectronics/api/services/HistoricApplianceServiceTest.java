@@ -90,10 +90,12 @@ class HistoricApplianceServiceTest {
     @Test
     void getHistoricApplianceByModel_existingModel() {
         when(applianceModelRepository.findByModel("Model A")).thenReturn(Optional.of(applianceModel));
-        when(historicApplianceRepository.findByModel(applianceModel)).thenReturn(Optional.of(historicAppliance));
+        List<HistoricAppliance> historicAppliances = new ArrayList<>();
+        historicAppliances.add(historicAppliance);
+        when(historicApplianceRepository.findByModel(applianceModel)).thenReturn(historicAppliances);
 
-        HistoricAppliance result = historicApplianceService.getHistoricApplianceByModel("Model A");
-        assertEquals(historicAppliance, result);
+        List<HistoricAppliance> result = historicApplianceService.getHistoricApplianceByModel("Model A");
+        assertEquals(historicAppliances, result);
     }
 
     /**

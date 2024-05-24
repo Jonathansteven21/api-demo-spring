@@ -1,7 +1,7 @@
 package online.lcelectronics.api.controllers;
 
 import online.lcelectronics.api.entities.Client;
-import online.lcelectronics.api.responses.ApiResponse;
+import online.lcelectronics.api.util.ApiResponse;
 import online.lcelectronics.api.services.ClientService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
