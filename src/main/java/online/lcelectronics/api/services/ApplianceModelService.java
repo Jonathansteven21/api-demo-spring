@@ -45,13 +45,25 @@ public class ApplianceModelService {
 
     // Retrieve appliance models based on specified criteria.
     public List<ApplianceModel> getApplianceModelsByCriteria(ApplianceModel applianceModel) {
-        Specification<ApplianceModel> spec = Specification.where(ApplianceModelSpecification.modelContainsIgnoreCase(applianceModel.getModel()))
-                .and(ApplianceModelSpecification.hasApplianceCategory(applianceModel.getApplianceCategory()))
-                .and(ApplianceModelSpecification.yearGreaterThanOrEqual(applianceModel.getManufactureYear()))
-                .and(ApplianceModelSpecification.hasBrand(applianceModel.getBrand()));
+        Specification<ApplianceModel> spec = Specification.where(null);
+
+        if (applianceModel.getModel() != null) {
+            spec = spec.and(ApplianceModelSpecification.withModel(applianceModel.getModel()));
+        }
+
+        if (applianceModel.getApplianceCategory() != null) {
+            spec = spec.and(ApplianceModelSpecification.withApplianceCategory(applianceModel.getApplianceCategory()));
+        }
+
+        if (applianceModel.getManufactureYear() != null) {
+            spec = spec.and(ApplianceModelSpecification.withYearGreaterThanOrEqual(applianceModel.getManufactureYear()));
+        }
+
+        if (applianceModel.getBrand() != null) {
+            spec = spec.and(ApplianceModelSpecification.withBrand(applianceModel.getBrand()));
+        }
 
         List<ApplianceModel> applianceModelList = applianceModelRepository.findAll(spec);
-
         if (applianceModelList.isEmpty()){
             throw new NotFoundException("Filter appliance model list not found");
         }

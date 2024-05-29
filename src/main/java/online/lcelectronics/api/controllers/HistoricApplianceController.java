@@ -59,7 +59,6 @@ public class HistoricApplianceController {
     // Save a historic appliance
     @PostMapping
     public ResponseEntity<ApiResponse<HistoricAppliance>> saveHistoricAppliance(@Valid @RequestBody HistoricAppliance historicAppliance) {
-        historicAppliance.setSerial(null);
         HistoricAppliance savedAppliance = historicApplianceService.saveHistoricAppliance(historicAppliance);
         return new ResponseEntity<>(new ApiResponse<>(HttpStatus.CREATED.value(), "Historic appliance saved", savedAppliance), HttpStatus.CREATED);
     }
