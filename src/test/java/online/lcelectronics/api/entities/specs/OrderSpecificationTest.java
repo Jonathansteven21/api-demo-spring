@@ -13,6 +13,10 @@ import static org.mockito.Mockito.*;
 
 class OrderSpecificationTest {
 
+    /**
+     * Tests the withId method of OrderSpecification.
+     * Verifies that the specification is created successfully and the predicate is formed correctly.
+     */
     @Test
     void withId() {
         String id = "12345";
@@ -20,7 +24,6 @@ class OrderSpecificationTest {
 
         assertNotNull(spec);
 
-        // Mocking the necessary classes for testing the specification
         Root<Order> root = mock(Root.class);
         CriteriaQuery<?> query = mock(CriteriaQuery.class);
         CriteriaBuilder cb = mock(CriteriaBuilder.class);
@@ -32,8 +35,10 @@ class OrderSpecificationTest {
         verify(cb).like(root.get("id").as(String.class), "%" + id + "%");
     }
 
-
-
+    /**
+     * Tests the withClientIdentityCard method of OrderSpecification.
+     * Verifies that the specification is created successfully and the predicate is formed correctly.
+     */
     @Test
     void withClientIdentityCard() {
         Long identityCard = 123456789L;
@@ -41,7 +46,6 @@ class OrderSpecificationTest {
 
         assertNotNull(spec);
 
-        // Mocking the necessary classes for testing the specification
         Root<Order> root = mock(Root.class);
         CriteriaQuery<?> query = mock(CriteriaQuery.class);
         CriteriaBuilder cb = mock(CriteriaBuilder.class);
@@ -50,10 +54,13 @@ class OrderSpecificationTest {
 
         spec.toPredicate(root, query, cb);
 
-        // Verifying that the 'equal' method was called with the correct parameters
         verify(cb).equal(root.get("client").get("identityCard"), identityCard);
     }
 
+    /**
+     * Tests the withHistoricAppliance method of OrderSpecification.
+     * Verifies that the specification is created successfully and the predicate is formed correctly.
+     */
     @Test
     void withHistoricAppliance() {
         String serial = "ABC123";
@@ -61,7 +68,6 @@ class OrderSpecificationTest {
 
         assertNotNull(spec);
 
-        // Mocking the necessary classes for testing the specification
         Root<Order> root = mock(Root.class);
         CriteriaQuery<?> query = mock(CriteriaQuery.class);
         CriteriaBuilder cb = mock(CriteriaBuilder.class);
@@ -70,10 +76,13 @@ class OrderSpecificationTest {
 
         spec.toPredicate(root, query, cb);
 
-        // Verifying that the 'equal' method was called with the correct parameters
         verify(cb).equal(root.get("historicAppliance").get("serial"), serial);
     }
 
+    /**
+     * Tests the withStatus method of OrderSpecification.
+     * Verifies that the specification is created successfully and the predicate is formed correctly.
+     */
     @Test
     void withStatus() {
         OrderStatus status = OrderStatus.COMPLETED;
@@ -81,17 +90,19 @@ class OrderSpecificationTest {
 
         assertNotNull(spec);
 
-        // Mocking the necessary classes for testing the specification
         Root<Order> root = mock(Root.class);
         CriteriaQuery<?> query = mock(CriteriaQuery.class);
         CriteriaBuilder cb = mock(CriteriaBuilder.class);
 
         spec.toPredicate(root, query, cb);
 
-        // Verifying that the 'equal' method was called with the correct parameters
         verify(cb).equal(root.get("status"), status);
     }
 
+    /**
+     * Tests the withCreatedDate method of OrderSpecification.
+     * Verifies that the specification is created successfully and the predicate is formed correctly.
+     */
     @Test
     void withCreatedDate() {
         LocalDate createdDate = LocalDate.of(2023, 5, 15);
@@ -99,14 +110,12 @@ class OrderSpecificationTest {
 
         assertNotNull(spec);
 
-        // Mocking the necessary classes for testing the specification
         Root<Order> root = mock(Root.class);
         CriteriaQuery<?> query = mock(CriteriaQuery.class);
         CriteriaBuilder cb = mock(CriteriaBuilder.class);
 
         spec.toPredicate(root, query, cb);
 
-        // Verifying that the 'equal' method was called with the correct parameters
         verify(cb).equal(root.get("createdDate"), createdDate);
     }
 }

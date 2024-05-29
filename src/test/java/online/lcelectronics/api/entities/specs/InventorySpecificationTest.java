@@ -15,6 +15,10 @@ import static org.mockito.Mockito.*;
 
 class InventorySpecificationTest {
 
+    /**
+     * Tests the withSerial method of InventorySpecification.
+     * Verifies that the specification is created successfully and the predicate is formed correctly.
+     */
     @Test
     void withSerial() {
         String serial = "123ABC";
@@ -31,6 +35,10 @@ class InventorySpecificationTest {
         verify(cb).like(root.get("serial"), "%123ABC%");
     }
 
+    /**
+     * Tests the withLocation method of InventorySpecification.
+     * Verifies that the specification is created successfully and the predicate is formed correctly.
+     */
     @Test
     void withLocation() {
         String location = "Warehouse A";
@@ -47,6 +55,10 @@ class InventorySpecificationTest {
         verify(cb).equal(root.get("location"), location);
     }
 
+    /**
+     * Tests the withLastPriceLessThanOrEqual method of InventorySpecification.
+     * Verifies that the specification is created successfully and the predicate is formed correctly.
+     */
     @Test
     void withLastPriceLessThanOrEqual() {
         BigDecimal lastPrice = new BigDecimal("999.99");
@@ -63,6 +75,10 @@ class InventorySpecificationTest {
         verify(cb).lessThanOrEqualTo(root.get("lastPrice"), lastPrice);
     }
 
+    /**
+     * Tests the withCompatibleApplianceModel method of InventorySpecification.
+     * Verifies that the specification is created successfully and the predicate is formed correctly.
+     */
     @Test
     void withCompatibleApplianceModel() {
         String model = "ModelX";
@@ -82,6 +98,10 @@ class InventorySpecificationTest {
         verify(cb).like(join.get("model"), "%" + model + "%");
     }
 
+    /**
+     * Tests the withComponent method of InventorySpecification.
+     * Verifies that the specification is created successfully and the predicate is formed correctly.
+     */
     @Test
     void withComponent() {
         Component component = Component.ACCESSORIES;
@@ -98,6 +118,10 @@ class InventorySpecificationTest {
         verify(cb).equal(root.get("component"), component);
     }
 
+    /**
+     * Tests the withBrand method of InventorySpecification.
+     * Verifies that the specification is created successfully and the predicate is formed correctly.
+     */
     @Test
     void withBrand() {
         Brand brand = Brand.SONY;
@@ -114,6 +138,10 @@ class InventorySpecificationTest {
         verify(cb).equal(root.get("brand"), brand);
     }
 
+    /**
+     * Tests the withNameIgnoreCase method of InventorySpecification.
+     * Verifies that the specification is created successfully and the predicate is formed correctly.
+     */
     @Test
     void withNameIgnoreCase() {
         String name = "Gadget";
@@ -130,4 +158,3 @@ class InventorySpecificationTest {
         verify(cb).like(cb.lower(root.get("name")), "%gadget%");
     }
 }
-
