@@ -55,7 +55,7 @@ public class ClientPaymentService {
 
     // Save a new client payment
     @Transactional
-    public ClientPayment saveClientPayment(@Valid ClientPayment clientPayment) {
+    public ClientPayment saveClientPayment(ClientPayment clientPayment) {
         verifyOrderExists(clientPayment.getOrder());
 
 
@@ -64,7 +64,7 @@ public class ClientPaymentService {
 
     // Update an existing client payment
     @Transactional
-    public ClientPayment updateClientPayment(@Valid ClientPayment clientPayment) {
+    public ClientPayment updateClientPayment(ClientPayment clientPayment) {
         verifyOrderExists(clientPayment.getOrder());
         if (!clientPaymentRepository.existsById(clientPayment.getId())) {
             throw new NotFoundException("Client payment not found with ID: " + clientPayment.getId());
