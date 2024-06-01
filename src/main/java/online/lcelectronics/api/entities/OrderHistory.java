@@ -31,7 +31,6 @@ public class OrderHistory {
     // Date of the event recorded in the order history
     @CreationTimestamp
     @Temporal(TemporalType.DATE)
-    @Null(message = "eventDate must be null")
     private LocalDate eventDate;
 
     // Text describing the event or action in the order history
