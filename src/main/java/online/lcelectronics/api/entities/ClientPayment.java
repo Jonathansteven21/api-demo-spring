@@ -29,7 +29,6 @@ public class ClientPayment {
     // Date when the payment was made
     @CreationTimestamp
     @Temporal(TemporalType.DATE)
-    @Null(message = "date must be null")
     private LocalDate date;
 
     // Amount of the payment

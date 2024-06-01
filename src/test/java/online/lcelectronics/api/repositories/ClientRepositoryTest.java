@@ -29,8 +29,8 @@ class ClientRepositoryTest {
     @BeforeEach
     void setUp() {
         client = new Client();
-        client.setPhone(1234567890);
-        client.setIdentityCard(123456);
+        client.setPhone(1234567890L);
+        client.setIdentityCard(123456L);
         client.setName("Test Client");
     }
 
@@ -55,7 +55,7 @@ class ClientRepositoryTest {
      */
     @Test
     void whenPhoneNotFound_thenReturnEmpty() {
-        int nonExistentPhone = 999999999;
+        Long nonExistentPhone = 999999999L;
         when(clientRepository.findByPhone(nonExistentPhone))
                 .thenReturn(Optional.empty());
 

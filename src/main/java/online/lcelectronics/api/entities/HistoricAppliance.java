@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Past;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.util.Date;
 
@@ -23,6 +24,7 @@ public class HistoricAppliance {
 
     // Many-to-One relationship with ApplianceModel to link the appliance model
     @ManyToOne
+    @JoinColumn(name = "model_id")
     @NotNull(message = "Model must be provided")
     private ApplianceModel model;
 

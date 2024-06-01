@@ -31,9 +31,9 @@ class ClientServiceTest {
     @BeforeEach
     void setUp() {
         client = new Client();
-        client.setIdentityCard(12345);
+        client.setIdentityCard(12345L);
         client.setName("John Doe");
-        client.setPhone(987654321);
+        client.setPhone(987654321L);
     }
 
     /**
@@ -57,9 +57,9 @@ class ClientServiceTest {
      */
     @Test
     void getClientByIdentityCard_existingId() {
-        when(clientRepository.findById(12345)).thenReturn(Optional.of(client));
+        when(clientRepository.findById(12345L)).thenReturn(Optional.of(client));
 
-        Client result = clientService.getClientByIdentityCard(12345);
+        Client result = clientService.getClientByIdentityCard(12345L);
         assertEquals(client, result);
     }
 
@@ -69,9 +69,9 @@ class ClientServiceTest {
      */
     @Test
     void getClientByIdentityCard_nonExistingId() {
-        when(clientRepository.findById(12345)).thenReturn(Optional.empty());
+        when(clientRepository.findById(12345L)).thenReturn(Optional.empty());
 
-        assertThrows(NotFoundException.class, () -> clientService.getClientByIdentityCard(12345));
+        assertThrows(NotFoundException.class, () -> clientService.getClientByIdentityCard(12345L));
     }
 
     /**
@@ -80,9 +80,9 @@ class ClientServiceTest {
      */
     @Test
     void getClientByPhone_existingPhone() {
-        when(clientRepository.findByPhone(987654321)).thenReturn(Optional.of(client));
+        when(clientRepository.findByPhone(987654321L)).thenReturn(Optional.of(client));
 
-        Client result = clientService.getClientByPhone(987654321);
+        Client result = clientService.getClientByPhone(987654321L);
         assertEquals(client, result);
     }
 
@@ -92,9 +92,9 @@ class ClientServiceTest {
      */
     @Test
     void getClientByPhone_nonExistingPhone() {
-        when(clientRepository.findByPhone(987654321)).thenReturn(Optional.empty());
+        when(clientRepository.findByPhone(987654321L)).thenReturn(Optional.empty());
 
-        assertThrows(NotFoundException.class, () -> clientService.getClientByPhone(987654321));
+        assertThrows(NotFoundException.class, () -> clientService.getClientByPhone(987654321L));
     }
 
     /**

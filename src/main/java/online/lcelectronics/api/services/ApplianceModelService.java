@@ -1,6 +1,5 @@
 package online.lcelectronics.api.services;
 
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
@@ -36,20 +35,35 @@ public class ApplianceModelService {
     }
 
     // Retrieve an appliance model by its model
-    public ApplianceModel getApplianceModelByModel(@NotEmpty(message = "Model cannot be null or empty") String model) throws NotFoundException {
-        return applianceModelRepository.findByModel(model)
-                .orElseThrow(() -> new NotFoundException("Appliance model not found with model: " + model));
+    public List<ApplianceModel> getApplianceModelByModel(@NotEmpty(message = "Model cannot be null or empty") String model) throws NotFoundException {
+        List<ApplianceModel> applianceModels = applianceModelRepository.findByModel(model);
+        if (applianceModels.isEmpty()) {
+            throw new NotFoundException("Appliance model not found with model: " + model);
+        }
+        return applianceModels;
     }
 
     // Retrieve appliance models based on specified criteria.
     public List<ApplianceModel> getApplianceModelsByCriteria(ApplianceModel applianceModel) {
-        Specification<ApplianceModel> spec = Specification.where(ApplianceModelSpecification.modelContainsIgnoreCase(applianceModel.getModel()))
-                .and(ApplianceModelSpecification.hasApplianceCategory(applianceModel.getApplianceCategory()))
-                .and(ApplianceModelSpecification.yearGreaterThanOrEqual(applianceModel.getManufactureYear()))
-                .and(ApplianceModelSpecification.hasBrand(applianceModel.getBrand()));
+        Specification<ApplianceModel> spec = Specification.where(null);
+
+        if (applianceModel.getModel() != null) {
+            spec = spec.and(ApplianceModelSpecification.withModel(applianceModel.getModel()));
+        }
+
+        if (applianceModel.getApplianceCategory() != null) {
+            spec = spec.and(ApplianceModelSpecification.withApplianceCategory(applianceModel.getApplianceCategory()));
+        }
+
+        if (applianceModel.getManufactureYear() != null) {
+            spec = spec.and(ApplianceModelSpecification.withYearGreaterThanOrEqual(applianceModel.getManufactureYear()));
+        }
+
+        if (applianceModel.getBrand() != null) {
+            spec = spec.and(ApplianceModelSpecification.withBrand(applianceModel.getBrand()));
+        }
 
         List<ApplianceModel> applianceModelList = applianceModelRepository.findAll(spec);
-
         if (applianceModelList.isEmpty()){
             throw new NotFoundException("Filter appliance model list not found");
         }
@@ -58,13 +72,13 @@ public class ApplianceModelService {
 
     // Save an appliance model
     @Transactional
-    public ApplianceModel saveApplianceModel(@Valid ApplianceModel applianceModel) {
+    public ApplianceModel saveApplianceModel(ApplianceModel applianceModel) {
         return applianceModelRepository.save(applianceModel);
     }
 
     // Update an appliance model
     @Transactional
-    public ApplianceModel updateApplianceModel(@Valid ApplianceModel applianceModel) {
+    public ApplianceModel updateApplianceModel(ApplianceModel applianceModel) {
         if (applianceModel.getId() == null) {
             throw new IllegalArgumentException("ApplianceModel ID cannot be null for update operation");
         }

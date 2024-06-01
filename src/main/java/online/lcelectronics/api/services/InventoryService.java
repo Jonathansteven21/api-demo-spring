@@ -54,13 +54,35 @@ public class InventoryService {
 
     // Retrieve inventory items based on specified criteria.
     public List<Inventory> getInventoryByCriteria(Inventory inventory) {
-        Specification<Inventory> spec = Specification.where(InventorySpecification.serialContains(inventory.getSerial()))
-                .and(InventorySpecification.hasLocation(inventory.getLocation()))
-                .and(InventorySpecification.lastPriceLessThanOrEqual(inventory.getLastPrice()))
-                .and(inventory.getCompatibleApplianceModels() != null ? InventorySpecification.hasCompatibleApplianceModel(inventory.getCompatibleApplianceModels().get(0).getModel()) : null)
-                .and(InventorySpecification.hasComponent(inventory.getComponent()))
-                .and(InventorySpecification.hasBrand(inventory.getBrand()))
-                .and(InventorySpecification.nameContainsIgnoreCase(inventory.getName()));
+        Specification<Inventory> spec = Specification.where(null);
+
+        if (inventory.getSerial() != null) {
+            spec = spec.and(InventorySpecification.withSerial(inventory.getSerial()));
+        }
+
+        if (inventory.getLocation() != null) {
+            spec = spec.and(InventorySpecification.withLocation(inventory.getLocation()));
+        }
+
+        if (inventory.getLastPrice() != null) {
+            spec = spec.and(InventorySpecification.withLastPriceLessThanOrEqual(inventory.getLastPrice()));
+        }
+
+        if (inventory.getCompatibleApplianceModels() != null && !inventory.getCompatibleApplianceModels().isEmpty()) {
+            spec = spec.and(InventorySpecification.withCompatibleApplianceModel(inventory.getCompatibleApplianceModels().get(0).getModel()));
+        }
+
+        if (inventory.getComponent() != null) {
+            spec = spec.and(InventorySpecification.withComponent(inventory.getComponent()));
+        }
+
+        if (inventory.getBrand() != null) {
+            spec = spec.and(InventorySpecification.withBrand(inventory.getBrand()));
+        }
+
+        if (inventory.getName() != null) {
+            spec = spec.and(InventorySpecification.withNameIgnoreCase(inventory.getName()));
+        }
 
         List<Inventory> inventoryItems = inventoryRepository.findAll(spec);
         if (inventoryItems.isEmpty()) {
@@ -71,14 +93,14 @@ public class InventoryService {
 
     // Save an inventory item
     @Transactional
-    public Inventory saveInventoryItem(@Valid Inventory inventoryItem) {
+    public Inventory saveInventoryItem(Inventory inventoryItem) {
         validateInventoryItem(inventoryItem);
         return inventoryRepository.save(inventoryItem);
     }
 
     // Update an inventory item
     @Transactional
-    public Inventory updateInventoryItem(@Valid Inventory inventoryItem) {
+    public Inventory updateInventoryItem(Inventory inventoryItem) {
         validateInventoryItem(inventoryItem);
         if (!inventoryRepository.existsById(inventoryItem.getId())) {
             throw new NotFoundException("Inventory item not found with ID: " + inventoryItem.getId());

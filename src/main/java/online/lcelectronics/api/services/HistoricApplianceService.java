@@ -13,7 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Validated
@@ -35,13 +37,23 @@ public class HistoricApplianceService {
                 .orElseThrow(() -> new NotFoundException("Historic appliance not found with serial number: " + serial));
     }
 
-    // Retrieve a historic appliance by its associated appliance model
-    public HistoricAppliance getHistoricApplianceByModel(@NotBlank(message = "Model name cannot be blank") String modelName) {
-        ApplianceModel model = applianceModelRepository.findByModel(modelName)
-                .orElseThrow(() -> new NotFoundException("Appliance model not found with model: " + modelName));
+    // Retrieve historic appliances by their associated appliance models
+    public List<HistoricAppliance> getHistoricApplianceByModel(@NotBlank(message = "Model name cannot be blank") String modelName) {
+        List<ApplianceModel> models = applianceModelRepository.findByModel(modelName);
+        if (models.isEmpty()) {
+            throw new NotFoundException("Appliance models not found with model: " + modelName);
+        }
+        List<HistoricAppliance> mergedHistoricAppliances = new ArrayList<>();
+        for (ApplianceModel model : models) {
+            List<HistoricAppliance> historicAppliances = historicApplianceRepository.findByModel(model);
+            mergedHistoricAppliances.addAll(historicAppliances);
+        }
 
-        return historicApplianceRepository.findByModel(model)
-                .orElseThrow(() -> new NotFoundException("Historic appliance not found for the given appliance model: " + modelName));
+        if (mergedHistoricAppliances.isEmpty()) {
+            throw new NotFoundException("Historic appliances not found for the given appliance model: " + modelName);
+        }
+
+        return mergedHistoricAppliances;
     }
 
     // Retrieve historic appliances based on a partial match of their serial numbers
@@ -64,14 +76,14 @@ public class HistoricApplianceService {
 
     // Save a historic appliance
     @Transactional
-    public HistoricAppliance saveHistoricAppliance(@Valid HistoricAppliance historicAppliance) {
+    public HistoricAppliance saveHistoricAppliance(HistoricAppliance historicAppliance) {
         verifyApplianceModelExists(historicAppliance.getModel());
         return historicApplianceRepository.save(historicAppliance);
     }
 
     // Update a historic appliance
     @Transactional
-    public HistoricAppliance updateHistoricAppliance(@Valid HistoricAppliance historicAppliance) {
+    public HistoricAppliance updateHistoricAppliance(HistoricAppliance historicAppliance) {
         verifyApplianceModelExists(historicAppliance.getModel());
         if (!historicApplianceRepository.existsById(historicAppliance.getSerial())) {
             throw new NotFoundException("Historic appliance model not found with ID: " + historicAppliance.getSerial());

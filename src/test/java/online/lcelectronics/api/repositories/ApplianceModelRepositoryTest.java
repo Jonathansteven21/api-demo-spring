@@ -9,6 +9,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -37,12 +40,12 @@ class ApplianceModelRepositoryTest {
     @Test
     void whenFindByModel_thenReturnApplianceModel() {
         when(applianceModelRepository.findByModel(applianceModel.getModel()))
-                .thenReturn(Optional.of(applianceModel));
+                .thenReturn(Collections.singletonList(applianceModel));
 
-        Optional<ApplianceModel> foundModel = applianceModelRepository.findByModel(applianceModel.getModel());
+        List<ApplianceModel> applianceModelList = applianceModelRepository.findByModel(applianceModel.getModel());
 
-        assertTrue(foundModel.isPresent());
-        assertEquals(applianceModel.getModel(), foundModel.get().getModel());
+        assertFalse(applianceModelList.isEmpty());
+        assertEquals(applianceModel.getModel(), applianceModelList.get(0).getModel());
     }
 
     /**
@@ -53,11 +56,11 @@ class ApplianceModelRepositoryTest {
     void whenModelNotFound_thenReturnEmpty() {
         String nonExistentModel = "Non Existent Model";
         when(applianceModelRepository.findByModel(nonExistentModel))
-                .thenReturn(Optional.empty());
+                .thenReturn(new ArrayList<>());
 
-        Optional<ApplianceModel> foundModel = applianceModelRepository.findByModel(nonExistentModel);
+        List<ApplianceModel> emptyList = applianceModelRepository.findByModel(nonExistentModel);
 
-        assertFalse(foundModel.isPresent());
+        assertTrue(emptyList.isEmpty());
     }
 
     /**

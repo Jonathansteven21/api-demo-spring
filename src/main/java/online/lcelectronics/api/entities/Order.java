@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Null;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import online.lcelectronics.api.enums.OrderStatus;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -17,6 +18,7 @@ import java.util.List;
 @Table(name = "`order`")
 @Getter
 @Setter
+@ToString
 @NoArgsConstructor
 public class Order {
 
@@ -51,7 +53,6 @@ public class Order {
     // Date and time when the order was created
     @CreationTimestamp
     @Temporal(TemporalType.DATE)
-    @Null(message = "createdDate must be null")
     private LocalDate createdDate;
 
     // Status of the order, represented by an enum OrderStatus

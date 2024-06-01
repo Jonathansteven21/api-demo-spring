@@ -33,13 +33,13 @@ public class ImageService {
 
     // Save a new image with validation
     @Transactional
-    public Image saveImage(@Valid Image image) {
+    public Image saveImage(Image image) {
         return imageRepository.save(image);
     }
 
     // Update an existing image with validation
     @Transactional
-    public Image updateImage(@Valid Image image) {
+    public Image updateImage(Image image) {
         if (!imageRepository.existsById(image.getId())) {
             throw new NotFoundException("Image not found with ID: " + image.getId());
         }

@@ -152,32 +152,42 @@ class OrderServiceTest {
     }
 
     /**
-     * Tests the updateOrder method of OrderService with an existing order.
-     * Verifies that the order is successfully updated.
+     * Tests the updateOrderStatus method of OrderService with an existing order.
+     * Verifies that the order status is successfully updated.
      */
     @Test
-    void updateOrder_validOrder() {
-        Order order = new Order();
-        order.setId(1); // Existing order
+    void updateOrderStatus_validOrder() {
+        Integer orderId = 1;
+        OrderStatus newStatus = OrderStatus.DELIVERED;
 
-        when(orderRepository.existsById(1)).thenReturn(true);
+        Order order = new Order();
+        order.setId(orderId);
+        order.setStatus(OrderStatus.DIAGNOSED);
+
+        when(orderRepository.findById(orderId)).thenReturn(Optional.of(order));
         when(orderRepository.saveAndFlush(order)).thenReturn(order);
 
-        Order result = orderService.updateOrder(order);
-        assertNotNull(result);
+        Order updatedOrder = orderService.updateOrderStatus(orderId, newStatus);
+
+        assertNotNull(updatedOrder);
+        assertEquals(newStatus, updatedOrder.getStatus());
+        verify(orderRepository).saveAndFlush(order);
     }
 
     /**
-     * Tests the updateOrder method of OrderService with a non-existing order.
+     * Tests the updateOrderStatus method of OrderService with a non-existing order.
      * Ensures that a NotFoundException is thrown.
      */
     @Test
-    void updateOrder_nonExistingOrder() {
-        Order order = new Order();
-        order.setId(1); // Non-existing order
+    void updateOrderStatus_nonExistingOrder() {
+        Integer orderId = 1;
+        OrderStatus newStatus = OrderStatus.DELIVERED;
 
-        when(orderRepository.existsById(1)).thenReturn(false);
+        when(orderRepository.findById(orderId)).thenReturn(Optional.empty());
 
-        assertThrows(NotFoundException.class, () -> orderService.updateOrder(order));
+        NotFoundException exception = assertThrows(NotFoundException.class, () -> orderService.updateOrderStatus(orderId, newStatus));
+
+        assertEquals("Order not found with ID: " + orderId, exception.getMessage());
+        verify(orderRepository, never()).saveAndFlush(any(Order.class));
     }
 }

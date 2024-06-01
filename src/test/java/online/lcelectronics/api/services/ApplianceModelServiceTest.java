@@ -16,6 +16,7 @@ import org.springframework.data.jpa.domain.Specification;
 
 import java.time.Year;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -88,10 +89,10 @@ class ApplianceModelServiceTest {
      */
     @Test
     void getApplianceModelByModel_existingModel() throws NotFoundException {
-        when(applianceModelRepository.findByModel("Test Model")).thenReturn(Optional.of(applianceModel));
+        when(applianceModelRepository.findByModel("Test Model")).thenReturn(Collections.singletonList(applianceModel));
 
-        ApplianceModel result = applianceModelService.getApplianceModelByModel("Test Model");
-        assertEquals(applianceModel, result);
+        List<ApplianceModel> result = applianceModelService.getApplianceModelByModel("Test Model");
+        assertEquals(applianceModel, result.get(0));
     }
 
     /**
@@ -100,7 +101,7 @@ class ApplianceModelServiceTest {
      */
     @Test
     void getApplianceModelByModel_nonExistingModel() {
-        when(applianceModelRepository.findByModel("Test Model")).thenReturn(Optional.empty());
+        when(applianceModelRepository.findByModel("Test Model")).thenReturn(new ArrayList<>());
 
         assertThrows(NotFoundException.class, () -> applianceModelService.getApplianceModelByModel("Test Model"));
     }
