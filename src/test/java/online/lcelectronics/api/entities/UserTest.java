@@ -17,9 +17,6 @@ class UserTest {
 
     private Validator validator;
 
-    /**
-     * Sets up the Validator instance before each test.
-     */
     @BeforeEach
     void setUp() {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
@@ -33,7 +30,7 @@ class UserTest {
     void testValidUser() {
         User user = new User();
         user.setUsername("validUser");
-        user.setPassword("validPassword");
+        user.setPassword("ValidPassword1!");
         user.setRole(Role.USER);
 
         Set<ConstraintViolation<User>> violations = validator.validate(user);
@@ -47,7 +44,7 @@ class UserTest {
     void testEmptyUsername() {
         User user = new User();
         user.setUsername("");
-        user.setPassword("validPassword");
+        user.setPassword("ValidPassword1!");
         user.setRole(Role.USER);
 
         Set<ConstraintViolation<User>> violations = validator.validate(user);
@@ -67,10 +64,18 @@ class UserTest {
         user.setRole(Role.USER);
 
         Set<ConstraintViolation<User>> violations = validator.validate(user);
-        assertEquals(1, violations.size(), "Empty password should have one violation");
-        ConstraintViolation<User> violation = violations.iterator().next();
-        assertEquals("Password must not be null or empty", violation.getMessage());
+        assertEquals(6, violations.size(), "Empty password should have seven violations");
+
+        int passwordRelatedViolations = 0;
+        for (ConstraintViolation<User> violation : violations) {
+            if (violation.getPropertyPath().toString().equals("password")) {
+                passwordRelatedViolations++;
+            }
+        }
+
+        assertEquals(6, passwordRelatedViolations, "All violations should be related to password");
     }
+
 
     /**
      * Tests that a null role causes a validation violation.
@@ -79,12 +84,76 @@ class UserTest {
     void testNullRole() {
         User user = new User();
         user.setUsername("validUser");
-        user.setPassword("validPassword");
+        user.setPassword("ValidPassword1!");
         user.setRole(null);
 
         Set<ConstraintViolation<User>> violations = validator.validate(user);
         assertEquals(1, violations.size(), "Null role should have one violation");
         ConstraintViolation<User> violation = violations.iterator().next();
         assertEquals("Role cannot be null", violation.getMessage());
+    }
+
+    /**
+     * Tests that a password without an uppercase letter causes a validation violation.
+     */
+    @Test
+    void testPasswordWithoutUppercase() {
+        User user = new User();
+        user.setUsername("validUser");
+        user.setPassword("invalidpassword1!");
+        user.setRole(Role.USER);
+
+        Set<ConstraintViolation<User>> violations = validator.validate(user);
+        assertEquals(1, violations.size(), "Password without uppercase letter should have one violation");
+        ConstraintViolation<User> violation = violations.iterator().next();
+        assertEquals("Password must contain at least one uppercase letter", violation.getMessage());
+    }
+
+    /**
+     * Tests that a password without a lowercase letter causes a validation violation.
+     */
+    @Test
+    void testPasswordWithoutLowercase() {
+        User user = new User();
+        user.setUsername("validUser");
+        user.setPassword("INVALIDPASSWORD1!");
+        user.setRole(Role.USER);
+
+        Set<ConstraintViolation<User>> violations = validator.validate(user);
+        assertEquals(1, violations.size(), "Password without lowercase letter should have one violation");
+        ConstraintViolation<User> violation = violations.iterator().next();
+        assertEquals("Password must contain at least one lowercase letter", violation.getMessage());
+    }
+
+    /**
+     * Tests that a password without a digit causes a validation violation.
+     */
+    @Test
+    void testPasswordWithoutDigit() {
+        User user = new User();
+        user.setUsername("validUser");
+        user.setPassword("InvalidPassword!");
+        user.setRole(Role.USER);
+
+        Set<ConstraintViolation<User>> violations = validator.validate(user);
+        assertEquals(1, violations.size(), "Password without digit should have one violation");
+        ConstraintViolation<User> violation = violations.iterator().next();
+        assertEquals("Password must contain at least one digit", violation.getMessage());
+    }
+
+    /**
+     * Tests that a password without a special character causes a validation violation.
+     */
+    @Test
+    void testPasswordWithoutSpecialCharacter() {
+        User user = new User();
+        user.setUsername("validUser");
+        user.setPassword("InvalidPassword1");
+        user.setRole(Role.USER);
+
+        Set<ConstraintViolation<User>> violations = validator.validate(user);
+        assertEquals(1, violations.size(), "Password without special character should have one violation");
+        ConstraintViolation<User> violation = violations.iterator().next();
+        assertEquals("Password must contain at least one special character", violation.getMessage());
     }
 }
