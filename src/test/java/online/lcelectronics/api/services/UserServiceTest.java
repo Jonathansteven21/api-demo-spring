@@ -1,6 +1,7 @@
 package online.lcelectronics.api.services;
 
 import online.lcelectronics.api.entities.User;
+import online.lcelectronics.api.enums.Role;
 import online.lcelectronics.api.exceptions.NotFoundException;
 import online.lcelectronics.api.repositories.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,6 +10,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Collections;
@@ -160,5 +163,39 @@ class UserServiceTest {
         when(userRepository.existsById(2L)).thenReturn(false);
 
         assertThrows(NotFoundException.class, () -> userService.deleteUser(2L));
+    }
+
+    /**
+     * Test loading a user by username when the user exists.
+     */
+    @Test
+    void loadUserByUsername_UserFound() {
+        // Mock a user with the given username
+        user.setId(null);
+        user.setRole(Role.USER); // Set user role
+
+        // Mock UserRepository to return the user when findByUsername is called
+        when(userRepository.findByUsername("testUser")).thenReturn(Optional.of(user));
+
+        // Call the method being tested
+        UserDetails userDetails = userService.loadUserByUsername("testUser");
+
+        // Verify that the UserDetails object is constructed correctly
+        assertNotNull(userDetails);
+        assertEquals(user.getUsername(), userDetails.getUsername());
+        assertEquals(user.getPassword(), userDetails.getPassword());
+        assertEquals(user.getRole().name(), userDetails.getAuthorities().iterator().next().getAuthority());
+    }
+
+    /**
+     * Test loading a user by username when the user does not exist.
+     */
+    @Test
+    void loadUserByUsername_UserNotFound() {
+        // Mock UserRepository to return an empty Optional when findByUsername is called
+        when(userRepository.findByUsername("nonexistentUser")).thenReturn(Optional.empty());
+
+        // Call the method being tested and expect it to throw UsernameNotFoundException
+        assertThrows(UsernameNotFoundException.class, () -> userService.loadUserByUsername("nonexistentUser"));
     }
 }
