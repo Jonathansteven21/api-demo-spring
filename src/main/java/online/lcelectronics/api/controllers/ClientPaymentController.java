@@ -60,6 +60,7 @@ public class ClientPaymentController {
     @PostMapping
     public ResponseEntity<ApiResponse<ClientPayment>> saveClientPayment(@RequestBody @Valid ClientPayment clientPayment) {
         clientPayment.setDate(null);
+        clientPayment.setId(null);
         ClientPayment savedClientPayment = clientPaymentService.saveClientPayment(clientPayment);
         ApiResponse<ClientPayment> response = new ApiResponse<>(HttpStatus.CREATED.value(), "Client payment saved successfully", savedClientPayment);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
