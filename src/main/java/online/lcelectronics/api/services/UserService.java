@@ -1,5 +1,6 @@
 package online.lcelectronics.api.services;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import online.lcelectronics.api.entities.User;
 import online.lcelectronics.api.exceptions.NotFoundException;
@@ -10,25 +11,29 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Validated
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class UserService implements UserDetailsService{
+public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
 
     // Retrieve all users
     public List<User> getAllUsers() {
         return userRepository.findAll();
+    }
+
+    // Retrieve count users
+    public int count() {
+        return userRepository.findAll().size();
     }
 
     // Retrieve a user by its ID
@@ -50,17 +55,19 @@ public class UserService implements UserDetailsService{
     }
 
     // Save a new user
+    @Transactional
     public User createUser(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
         return userRepository.save(user);
     }
 
     // Update a user
+    @Transactional
     public User updateUser(User user) {
         if (!userRepository.existsById(user.getId())) {
             throw new NotFoundException("User not found with ID: " + user.getId());
         }
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
         return userRepository.saveAndFlush(user);
     }
 
@@ -79,7 +86,7 @@ public class UserService implements UserDetailsService{
                 .orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + username));
 
         // Create a GrantedAuthority based on the user's role
-        GrantedAuthority authority = new SimpleGrantedAuthority(user.getRole().name());
+        GrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + user.getRole().toString());
 
         // Create and return a UserDetails object using the found user's details
         return new org.springframework.security.core.userdetails.User(
