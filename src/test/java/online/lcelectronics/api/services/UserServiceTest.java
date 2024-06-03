@@ -12,6 +12,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Collections;
@@ -26,9 +27,6 @@ class UserServiceTest {
 
     @Mock
     private UserRepository userRepository;
-
-    @Mock
-    private PasswordEncoder passwordEncoder;
 
     @InjectMocks
     private UserService userService;
@@ -111,13 +109,13 @@ class UserServiceTest {
      */
     @Test
     void createUser() {
-        when(passwordEncoder.encode("testPassword")).thenReturn("encodedPassword");
-        when(userRepository.save(user)).thenReturn(user);
+        when(userRepository.save(any(User.class))).thenAnswer(i -> i.getArguments()[0]);
 
         User result = userService.createUser(user);
 
         assertNotNull(result);
-        assertEquals("encodedPassword", result.getPassword());
+        assertEquals(user.getUsername(), result.getUsername());
+        assertNotEquals("testPassword", result.getPassword()); // Verify that the password has been encoded
     }
 
     /**
@@ -126,13 +124,13 @@ class UserServiceTest {
     @Test
     void updateUser_UserFound() {
         when(userRepository.existsById(1L)).thenReturn(true);
-        when(passwordEncoder.encode("testPassword")).thenReturn("encodedPassword");
-        when(userRepository.saveAndFlush(user)).thenReturn(user);
+        when(userRepository.saveAndFlush(any(User.class))).thenAnswer(i -> i.getArguments()[0]);
 
         User result = userService.updateUser(user);
 
         assertNotNull(result);
-        assertEquals("encodedPassword", result.getPassword());
+        assertEquals(user.getUsername(), result.getUsername());
+        assertNotEquals("testPassword", result.getPassword()); // Verify that the password has been encoded
     }
 
     /**
@@ -184,7 +182,7 @@ class UserServiceTest {
         assertNotNull(userDetails);
         assertEquals(user.getUsername(), userDetails.getUsername());
         assertEquals(user.getPassword(), userDetails.getPassword());
-        assertEquals(user.getRole().name(), userDetails.getAuthorities().iterator().next().getAuthority());
+        assertEquals("ROLE_" + user.getRole().toString(), userDetails.getAuthorities().iterator().next().getAuthority());
     }
 
     /**

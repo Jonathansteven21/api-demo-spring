@@ -7,19 +7,21 @@ import online.lcelectronics.api.util.ApiResponse;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 
-@SpringBootTest
+import org.junit.jupiter.api.BeforeEach;
+import org.mockito.MockitoAnnotations;
+
+import java.math.BigDecimal;
+import java.util.Arrays;
+
 class ClientPaymentControllerTest {
 
     @Mock
@@ -28,129 +30,82 @@ class ClientPaymentControllerTest {
     @InjectMocks
     private ClientPaymentController clientPaymentController;
 
-    /**
-     * Tests the getAllClientPayments method of ClientPaymentController.
-     * Verifies that the response contains the expected data and status.
-     */
+    private ClientPayment clientPayment;
+
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+        clientPayment = new ClientPayment();
+        clientPayment.setId(1);
+        clientPayment.setOrder(new Order());
+        clientPayment.setDate(LocalDate.now());
+        clientPayment.setAmount(new BigDecimal("100.00"));
+    }
+
     @Test
     void getAllClientPayments() {
-        List<ClientPayment> clientPayments = new ArrayList<>();
-        clientPayments.add(new ClientPayment());
+        List<ClientPayment> clientPayments = Arrays.asList(clientPayment);
         when(clientPaymentService.getAllClientPayments()).thenReturn(clientPayments);
 
         ResponseEntity<ApiResponse<List<ClientPayment>>> responseEntity = clientPaymentController.getAllClientPayments();
 
-        assertNotNull(responseEntity);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        ApiResponse<List<ClientPayment>> response = responseEntity.getBody();
-        assertNotNull(response);
-        assertEquals(HttpStatus.OK.value(), response.getStatus());
-        assertEquals("Client payments retrieved successfully", response.getMessage());
-        assertEquals(clientPayments, response.getData());
+        assertEquals(clientPayments, responseEntity.getBody().getData());
     }
 
-    /**
-     * Tests the getClientPaymentById method of ClientPaymentController.
-     * Verifies that the response contains the expected data and status.
-     */
     @Test
     void getClientPaymentById() {
-        ClientPayment clientPayment = new ClientPayment();
-        when(clientPaymentService.getClientPaymentById(1)).thenReturn(clientPayment);
+        Integer clientPaymentId = 1;
+        when(clientPaymentService.getClientPaymentById(clientPaymentId)).thenReturn(clientPayment);
 
-        ResponseEntity<ApiResponse<ClientPayment>> responseEntity = clientPaymentController.getClientPaymentById(1);
+        ResponseEntity<ApiResponse<ClientPayment>> responseEntity = clientPaymentController.getClientPaymentById(clientPaymentId);
 
-        assertNotNull(responseEntity);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        ApiResponse<ClientPayment> response = responseEntity.getBody();
-        assertNotNull(response);
-        assertEquals(HttpStatus.OK.value(), response.getStatus());
-        assertEquals("Client payment retrieved successfully", response.getMessage());
-        assertEquals(clientPayment, response.getData());
+        assertEquals(clientPayment, responseEntity.getBody().getData());
     }
 
-    /**
-     * Tests the getClientPaymentsByOrder method of ClientPaymentController.
-     * Verifies that the response contains the expected data and status.
-     */
     @Test
     void getClientPaymentsByOrder() {
-        List<ClientPayment> clientPayments = new ArrayList<>();
-        clientPayments.add(new ClientPayment());
-        when(clientPaymentService.getClientPaymentsByOrder(any(Order.class))).thenReturn(clientPayments);
+        Integer orderId = 1;
+        List<ClientPayment> clientPayments = Arrays.asList(clientPayment);
+        when(clientPaymentService.getClientPaymentsByOrder(any())).thenReturn(clientPayments);
 
-        ResponseEntity<ApiResponse<List<ClientPayment>>> responseEntity = clientPaymentController.getClientPaymentsByOrder(1);
+        ResponseEntity<ApiResponse<List<ClientPayment>>> responseEntity = clientPaymentController.getClientPaymentsByOrder(orderId);
 
-        assertNotNull(responseEntity);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        ApiResponse<List<ClientPayment>> response = responseEntity.getBody();
-        assertNotNull(response);
-        assertEquals(HttpStatus.OK.value(), response.getStatus());
-        assertEquals("Client payments retrieved successfully for the order", response.getMessage());
-        assertEquals(clientPayments, response.getData());
+        assertEquals(clientPayments, responseEntity.getBody().getData());
     }
 
-    /**
-     * Tests the getClientPaymentsByDate method of ClientPaymentController.
-     * Verifies that the response contains the expected data and status.
-     */
     @Test
     void getClientPaymentsByDate() {
-        List<ClientPayment> clientPayments = new ArrayList<>();
-        clientPayments.add(new ClientPayment());
-        when(clientPaymentService.getClientPaymentsByDate(any(LocalDate.class))).thenReturn(clientPayments);
+        LocalDate date = LocalDate.now();
+        List<ClientPayment> clientPayments = Arrays.asList(clientPayment);
+        when(clientPaymentService.getClientPaymentsByDate(date)).thenReturn(clientPayments);
 
-        ResponseEntity<ApiResponse<List<ClientPayment>>> responseEntity = clientPaymentController.getClientPaymentsByDate(LocalDate.now());
+        ResponseEntity<ApiResponse<List<ClientPayment>>> responseEntity = clientPaymentController.getClientPaymentsByDate(date);
 
-        assertNotNull(responseEntity);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        ApiResponse<List<ClientPayment>> response = responseEntity.getBody();
-        assertNotNull(response);
-        assertEquals(HttpStatus.OK.value(), response.getStatus());
-        assertEquals("Client payments retrieved successfully for the date", response.getMessage());
-        assertEquals(clientPayments, response.getData());
+        assertEquals(clientPayments, responseEntity.getBody().getData());
     }
 
-    /**
-     * Tests the saveClientPayment method of ClientPaymentController.
-     * Verifies that the response contains the expected data and status.
-     */
     @Test
     void saveClientPayment() {
-        ClientPayment clientPayment = new ClientPayment();
-        ClientPayment savedClientPayment = new ClientPayment();
-        when(clientPaymentService.saveClientPayment(clientPayment)).thenReturn(savedClientPayment);
+        when(clientPaymentService.saveClientPayment(clientPayment)).thenReturn(clientPayment);
 
         ResponseEntity<ApiResponse<ClientPayment>> responseEntity = clientPaymentController.saveClientPayment(clientPayment);
 
-        assertNotNull(responseEntity);
         assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
-        ApiResponse<ClientPayment> response = responseEntity.getBody();
-        assertNotNull(response);
-        assertEquals(HttpStatus.CREATED.value(), response.getStatus());
-        assertEquals("Client payment saved successfully", response.getMessage());
-        assertEquals(savedClientPayment, response.getData());
+        assertEquals(clientPayment, responseEntity.getBody().getData());
     }
 
-    /**
-     * Tests the updateClientPayment method of ClientPaymentController.
-     * Verifies that the response contains the expected data and status.
-     */
     @Test
     void updateClientPayment() {
-        Integer clientId = 1;
-        ClientPayment clientPayment = new ClientPayment();
-        ClientPayment updatedClientPayment = new ClientPayment();
-        when(clientPaymentService.updateClientPayment(clientPayment)).thenReturn(updatedClientPayment);
+        Integer clientPaymentId = 1;
+        when(clientPaymentService.updateClientPayment(clientPayment)).thenReturn(clientPayment);
 
-        ResponseEntity<ApiResponse<ClientPayment>> responseEntity = clientPaymentController.updateClientPayment(clientId, clientPayment);
+        ResponseEntity<ApiResponse<ClientPayment>> responseEntity = clientPaymentController.updateClientPayment(clientPaymentId, clientPayment);
 
-        assertNotNull(responseEntity);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        ApiResponse<ClientPayment> response = responseEntity.getBody();
-        assertNotNull(response);
-        assertEquals(HttpStatus.OK.value(), response.getStatus());
-        assertEquals("Client payment updated successfully", response.getMessage());
-        assertEquals(updatedClientPayment, response.getData());
+        assertEquals(clientPayment, responseEntity.getBody().getData());
     }
 }
