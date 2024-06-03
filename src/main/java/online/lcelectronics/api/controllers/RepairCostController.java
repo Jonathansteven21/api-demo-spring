@@ -64,6 +64,7 @@ public class RepairCostController {
     // Save a new repair cost
     @PostMapping
     public ResponseEntity<ApiResponse<RepairCost>> saveRepairCost(@Valid @RequestBody RepairCost repairCost) {
+        repairCost.setId(null);
         RepairCost savedRepairCost = repairCostService.saveRepairCost(repairCost);
         ApiResponse<RepairCost> response = new ApiResponse<>(HttpStatus.CREATED.value(), "Repair cost saved successfully", savedRepairCost);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
