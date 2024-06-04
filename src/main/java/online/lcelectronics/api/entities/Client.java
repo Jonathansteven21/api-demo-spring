@@ -18,7 +18,7 @@ public class Client {
     // Primary key for the Client table
     @Id
     @NotNull(message = "Identity card cannot be null")
-    private Integer identityCard;
+    private Long identityCard;
 
     // Name of the client
     @NotBlank(message = "Name cannot be blank")
@@ -26,7 +26,7 @@ public class Client {
 
     // Phone number of the client
     @NotNull(message = "Phone number cannot be null")
-    private Integer phone;
+    private Long phone;
 
     // Address of the client
     @NotBlank(message = "Address cannot be blank")

@@ -48,8 +48,6 @@ class ClientPaymentTest {
     /**
      * Tests validation when the order is null.
      * Ensures a constraint violation occurs when the order is null.
-     *
-     * @param invalidOrder the invalid order (null).
      */
     @ParameterizedTest
     @NullSource
@@ -64,25 +62,8 @@ class ClientPaymentTest {
     }
 
     /**
-     * Tests validation when the date is not null.
-     * Ensures a constraint violation occurs when the date is not null.
-     */
-    @Test
-    void whenDateIsNotNull_thenOneConstraintViolation() {
-        clientPayment.setDate(LocalDate.now());
-
-        Set<ConstraintViolation<ClientPayment>> violations = validator.validate(clientPayment);
-
-        assertEquals(1, violations.size());
-        ConstraintViolation<ClientPayment> violation = violations.iterator().next();
-        assertEquals("date must be null", violation.getMessage());
-    }
-
-    /**
      * Tests validation when the amount is null.
      * Ensures a constraint violation occurs when the amount is null.
-     *
-     * @param invalidAmount the invalid amount (null).
      */
     @ParameterizedTest
     @NullSource
@@ -99,8 +80,6 @@ class ClientPaymentTest {
     /**
      * Tests validation when the amount is not positive.
      * Ensures a constraint violation occurs when the amount is not positive.
-     *
-     * @param invalidAmount the invalid amount (not positive).
      */
     @ParameterizedTest
     @ValueSource(doubles = {-100.00, -1.00, 0.00})

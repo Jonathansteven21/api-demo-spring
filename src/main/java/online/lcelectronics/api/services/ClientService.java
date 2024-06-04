@@ -27,13 +27,13 @@ public class ClientService {
     }
 
     // Retrieve a client by their identity card number
-    public Client getClientByIdentityCard(@NotNull(message = "Identity card number cannot be null") Integer identityCard) {
+    public Client getClientByIdentityCard(@NotNull(message = "Identity card number cannot be null") Long identityCard) {
         return clientRepository.findById(identityCard)
                 .orElseThrow(() -> new NotFoundException("Client not found with identity card: " + identityCard));
     }
 
     // Retrieve a client by their phone number; throw NotFoundException if not found.
-    public Client getClientByPhone(@NotNull(message = "Phone number cannot be null") int phone) {
+    public Client getClientByPhone(@NotNull(message = "Phone number cannot be null") Long phone) {
         return clientRepository.findByPhone(phone)
                 .orElseThrow(() -> new NotFoundException("Client not found with phone number: " + phone));
     }
@@ -58,13 +58,17 @@ public class ClientService {
 
     // Save a new client
     @Transactional
-    public Client saveClient(@Valid Client client) {
+    public Client saveClient(Client client) {
+        Long identityCard = client.getIdentityCard();
+        if (clientRepository.existsById(identityCard)) {
+            throw new IllegalArgumentException("Client with identity card " + identityCard + " already exists");
+        }
         return clientRepository.save(client);
     }
 
     // Update an existing client
     @Transactional
-    public Client updateClient(@Valid Client client) {
+    public Client updateClient(Client client) {
         if (!clientRepository.existsById(client.getIdentityCard())) {
             throw new NotFoundException("Client not found with Identity card: " + client.getIdentityCard());
         }

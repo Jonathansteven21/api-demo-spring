@@ -58,14 +58,14 @@ public class RepairCostService {
 
     // Save a repair cost
     @Transactional
-    public RepairCost saveRepairCost(@Valid RepairCost repairCost) {
+    public RepairCost saveRepairCost(RepairCost repairCost) {
         validateRepairCost(repairCost);
         return repairCostRepository.save(repairCost);
     }
 
     // Update a repair cost
     @Transactional
-    public RepairCost updateRepairCost(@Valid RepairCost repairCost) {
+    public RepairCost updateRepairCost(RepairCost repairCost) {
         if (!repairCostRepository.existsById(repairCost.getId())) {
             throw new NotFoundException("Repair cost not found with ID: " + repairCost.getId());
         }

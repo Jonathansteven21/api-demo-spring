@@ -1,12 +1,12 @@
 package online.lcelectronics.api.services;
 
 import jakarta.transaction.Transactional;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import online.lcelectronics.api.entities.Image;
 import online.lcelectronics.api.entities.Order;
 import online.lcelectronics.api.entities.specs.OrderSpecification;
+import online.lcelectronics.api.enums.OrderStatus;
 import online.lcelectronics.api.exceptions.NotFoundException;
 import online.lcelectronics.api.repositories.ClientRepository;
 import online.lcelectronics.api.repositories.HistoricApplianceRepository;
@@ -15,7 +15,6 @@ import online.lcelectronics.api.repositories.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
@@ -48,12 +47,30 @@ public class OrderService {
     // Filters orders by client's identity card.
     // Filters orders by historic appliance serial number.
     // Filters orders by status.
+    // Filters orders by created date.
     // Returns a list of orders that match the specified criteria.
     public List<Order> getOrdersByCriteria(Order order) {
-        Specification<Order> spec = Specification.where(OrderSpecification.idContains(String.valueOf(order.getId())))
-                .and(StringUtils.hasText(String.valueOf(order.getClient().getIdentityCard())) ? OrderSpecification.hasClient(order.getClient().getIdentityCard()) : null)
-                .and(StringUtils.hasText(order.getHistoricAppliance().getSerial()) ? OrderSpecification.hasHistoricAppliance(order.getHistoricAppliance().getSerial()) : null)
-                .and(OrderSpecification.hasStatus(order.getStatus()));
+        Specification<Order> spec = Specification.where(null);
+
+        if (order.getId() != null) {
+            spec = spec.and(OrderSpecification.withId(String.valueOf(order.getId())));
+        }
+
+        if (order.getClient() != null && order.getClient().getIdentityCard() != null) {
+            spec = spec.and(OrderSpecification.withClientIdentityCard(order.getClient().getIdentityCard()));
+        }
+
+        if (order.getHistoricAppliance() != null && order.getHistoricAppliance().getSerial() != null) {
+            spec = spec.and(OrderSpecification.withHistoricAppliance(order.getHistoricAppliance().getSerial()));
+        }
+
+        if (order.getStatus() != null) {
+            spec = spec.and(OrderSpecification.withStatus(order.getStatus()));
+        }
+
+        if (order.getCreatedDate() != null) {
+            spec = spec.and(OrderSpecification.withCreatedDate(order.getCreatedDate()));
+        }
 
         List<Order> orderList = orderRepository.findAll(spec);
         if (orderList.isEmpty()) {
@@ -64,19 +81,19 @@ public class OrderService {
 
     // Save an order
     @Transactional
-    public Order saveOrder(@Valid Order order) {
+    public Order saveOrder(Order order) {
         validateOrder(order);
         return orderRepository.save(order);
     }
 
-    // Update an order
+    // Update an order status
     @Transactional
-    public Order updateOrder(@Valid Order order) {
-        validateOrder(order);
-        if (!orderRepository.existsById(order.getId())) {
-            throw new NotFoundException("Order entry not found with ID: " + order.getId());
-        }
-        return orderRepository.saveAndFlush(order);
+    public Order updateOrderStatus(@NotNull Integer id, @NotNull OrderStatus status) {
+        Order existingOrder = orderRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Order not found with ID: " + id));
+
+        existingOrder.setStatus(status);
+        return orderRepository.saveAndFlush(existingOrder);
     }
 
     // Private method to validate order

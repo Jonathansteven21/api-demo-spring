@@ -24,9 +24,9 @@ class ClientTest {
         validator = factory.getValidator();
 
         client = new Client();
-        client.setIdentityCard(123456789);
+        client.setIdentityCard(123456789L);
         client.setName("Test Client");
-        client.setPhone(1234567890);
+        client.setPhone(1234567890L);
         client.setAddress("123 Test Street");
     }
 
@@ -36,9 +36,9 @@ class ClientTest {
      */
     @Test
     void testGettersAndSetters() {
-        assertEquals(123456789, client.getIdentityCard());
+        assertEquals(123456789L, client.getIdentityCard());
         assertEquals("Test Client", client.getName());
-        assertEquals(1234567890, client.getPhone());
+        assertEquals(1234567890L, client.getPhone());
         assertEquals("123 Test Street", client.getAddress());
     }
 

@@ -10,10 +10,10 @@ import java.util.Optional;
 
 // This interface defines methods to access Client entities in the database
 @Repository
-public interface ClientRepository extends JpaRepository<Client, Integer> {
+public interface ClientRepository extends JpaRepository<Client, Long> {
 
     // Method to find a Client by its phone number
-    Optional<Client> findByPhone(int phone);
+    Optional<Client> findByPhone(Long phone);
 
     // Method to find Clients by a partial match of their identity card
     @Query("SELECT c FROM Client c WHERE CAST(c.identityCard AS string) LIKE %:identityCard%")
