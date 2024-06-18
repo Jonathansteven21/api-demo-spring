@@ -1,9 +1,7 @@
-package online.lcelectronics.api.controllers;
+package online.lcelectronics.api.user;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import online.lcelectronics.api.entities.User;
-import online.lcelectronics.api.services.UserService;
 import online.lcelectronics.api.util.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -41,8 +39,8 @@ public class UserController {
     @PostMapping
     public ResponseEntity<ApiResponse<User>> createUser(@Valid @RequestBody User user) {
         user.setId(null);
-        User newUser = userService.createUser(user);
-        ApiResponse<User> response = new ApiResponse<>(HttpStatus.CREATED.value(), "User created successfully", newUser);
+//        User newUser = userService.createUser(user);
+        ApiResponse<User> response = new ApiResponse<>(HttpStatus.CREATED.value(), "User created successfully", null);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 

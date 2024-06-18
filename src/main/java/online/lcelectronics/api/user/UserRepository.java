@@ -1,6 +1,5 @@
-package online.lcelectronics.api.repositories;
+package online.lcelectronics.api.user;
 
-import online.lcelectronics.api.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
