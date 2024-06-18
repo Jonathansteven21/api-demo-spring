@@ -1,4 +1,4 @@
-package online.lcelectronics.api.enums;
+package online.lcelectronics.api.user;
 
 public enum Role {
     USER,

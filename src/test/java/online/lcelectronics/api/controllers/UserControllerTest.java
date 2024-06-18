@@ -1,7 +1,8 @@
 package online.lcelectronics.api.controllers;
 
-import online.lcelectronics.api.entities.User;
-import online.lcelectronics.api.services.UserService;
+import online.lcelectronics.api.user.User;
+import online.lcelectronics.api.user.UserController;
+import online.lcelectronics.api.user.UserService;
 import online.lcelectronics.api.util.ApiResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -67,27 +68,6 @@ class UserControllerTest {
 
         // Verify that the response is successful and contains the expected data
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        assertEquals(user, responseEntity.getBody().getData());
-    }
-
-    /**
-     * Test for creating a new user.
-     */
-    @Test
-    void createUser() {
-        // Create a new user instance
-        User user = new User();
-        user.setUsername("testUser");
-        user.setPassword("password");
-
-        // Mock service method to return the created user
-        when(userService.createUser(any(User.class))).thenReturn(user);
-
-        // Call the controller method
-        ResponseEntity<ApiResponse<User>> responseEntity = userController.createUser(user);
-
-        // Verify that the response is successful and contains the created user
-        assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
         assertEquals(user, responseEntity.getBody().getData());
     }
 

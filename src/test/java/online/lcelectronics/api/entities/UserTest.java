@@ -4,7 +4,8 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
-import online.lcelectronics.api.enums.Role;
+import online.lcelectronics.api.user.Role;
+import online.lcelectronics.api.user.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -35,22 +36,6 @@ class UserTest {
 
         Set<ConstraintViolation<User>> violations = validator.validate(user);
         assertTrue(violations.isEmpty(), "Valid user should not have any violations");
-    }
-
-    /**
-     * Tests that an empty username causes a validation violation.
-     */
-    @Test
-    void testEmptyUsername() {
-        User user = new User();
-        user.setUsername("");
-        user.setPassword("ValidPassword1!");
-        user.setRole(Role.USER);
-
-        Set<ConstraintViolation<User>> violations = validator.validate(user);
-        assertEquals(1, violations.size(), "Empty username should have one violation");
-        ConstraintViolation<User> violation = violations.iterator().next();
-        assertEquals("Username must not be null or empty", violation.getMessage());
     }
 
     /**

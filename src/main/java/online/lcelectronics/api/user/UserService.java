@@ -1,11 +1,10 @@
-package online.lcelectronics.api.services;
+package online.lcelectronics.api.user;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import online.lcelectronics.api.entities.User;
 import online.lcelectronics.api.exceptions.NotFoundException;
-import online.lcelectronics.api.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -43,7 +42,7 @@ public class UserService {
     // Save a new user
     @Transactional
     public User createUser(User user) {
-        user.setPassword(user.getPassword());
+        user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
         return userRepository.save(user);
     }
 
@@ -53,7 +52,7 @@ public class UserService {
         if (!userRepository.existsById(user.getId())) {
             throw new NotFoundException("User not found with ID: " + user.getId());
         }
-        user.setPassword((user.getPassword()));
+        user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
         return userRepository.saveAndFlush(user);
     }
 
