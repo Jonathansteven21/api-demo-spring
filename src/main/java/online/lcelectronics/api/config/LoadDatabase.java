@@ -1,8 +1,8 @@
 package online.lcelectronics.api.config;
 
-import online.lcelectronics.api.entities.User;
-import online.lcelectronics.api.enums.Role;
-import online.lcelectronics.api.services.UserService;
+import online.lcelectronics.api.user.User;
+import online.lcelectronics.api.user.Role;
+import online.lcelectronics.api.user.UserService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
