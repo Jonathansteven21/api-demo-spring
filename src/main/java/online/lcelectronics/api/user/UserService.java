@@ -12,7 +12,7 @@ import java.util.List;
 
 @Service
 @Validated
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
@@ -42,6 +42,10 @@ public class UserService {
     // Save a new user
     @Transactional
     public User createUser(User user) {
+        String username = user.getUsername();
+        if (userRepository.findByUsername(username).isPresent()) {
+            throw new IllegalArgumentException("User with username " + username + " already exists");
+        }
         user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
         return userRepository.save(user);
     }
@@ -49,10 +53,13 @@ public class UserService {
     // Update a user
     @Transactional
     public User updateUser(User user) {
-        if (!userRepository.existsById(user.getId())) {
-            throw new NotFoundException("User not found with ID: " + user.getId());
+        User existingUser = userRepository.findById(user.getId())
+                .orElseThrow(() -> new NotFoundException("User not found with ID: " + user.getId()));
+
+        if (!new BCryptPasswordEncoder().matches(user.getPassword(), existingUser.getPassword())) {
+            user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
         }
-        user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
+
         return userRepository.saveAndFlush(user);
     }
 

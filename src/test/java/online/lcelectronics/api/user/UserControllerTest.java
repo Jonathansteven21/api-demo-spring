@@ -1,8 +1,5 @@
-package online.lcelectronics.api.controllers;
+package online.lcelectronics.api.user;
 
-import online.lcelectronics.api.user.User;
-import online.lcelectronics.api.user.UserController;
-import online.lcelectronics.api.user.UserService;
 import online.lcelectronics.api.util.ApiResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

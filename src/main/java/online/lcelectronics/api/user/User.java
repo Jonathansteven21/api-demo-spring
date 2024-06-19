@@ -23,10 +23,11 @@ public class User implements UserDetails {
 
     // Primary key for the User table
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     // Username of the user
+    @NotEmpty(message = "Username must not be null or empty")
     private String username;
 
     // Password of the user
@@ -40,7 +41,6 @@ public class User implements UserDetails {
 
     // Role of the user
     @Enumerated(EnumType.STRING)
-    @NotNull(message = "Role cannot be null")
     private Role role;
 
     @Override

@@ -18,7 +18,7 @@ import io.jsonwebtoken.security.Keys;
 public class JwtService {
 
     private static final Key SECRET_KEY = Keys.secretKeyFor(SignatureAlgorithm.HS256);
-    private static final int EXPIRATION_TIME = 7200;
+    private static final int EXPIRATION_TIME_SECONDS= 7200;
 
     public String getToken(UserDetails user) {
         return getToken(new HashMap<>(), user);
@@ -30,7 +30,7 @@ public class JwtService {
                 .setClaims(extraClaims)
                 .setSubject(user.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis()+EXPIRATION_TIME))
+                .setExpiration(new Date(System.currentTimeMillis()+EXPIRATION_TIME_SECONDS*1000))
                 .signWith(SECRET_KEY, SignatureAlgorithm.HS256)
                 .compact();
     }
