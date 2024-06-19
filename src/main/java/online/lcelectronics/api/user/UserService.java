@@ -50,17 +50,25 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    // Update a user
+    // Update username for a user
     @Transactional
-    public User updateUser(User user) {
-        User existingUser = userRepository.findById(user.getId())
-                .orElseThrow(() -> new NotFoundException("User not found with ID: " + user.getId()));
+    public User updateUsername(Long userId, String newUsername) {
+        User existingUser = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("User not found with ID: " + userId));
 
-        if (!new BCryptPasswordEncoder().matches(user.getPassword(), existingUser.getPassword())) {
-            user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
-        }
+        existingUser.setUsername(newUsername);
+        return userRepository.saveAndFlush(existingUser);
+    }
 
-        return userRepository.saveAndFlush(user);
+    // Update password for a user
+    @Transactional
+    public User updatePassword(Long userId, String newPassword) {
+        User existingUser = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("User not found with ID: " + userId));
+
+        existingUser.setPassword(new BCryptPasswordEncoder().encode(newPassword));
+
+        return userRepository.saveAndFlush(existingUser);
     }
 
     // Delete a user
