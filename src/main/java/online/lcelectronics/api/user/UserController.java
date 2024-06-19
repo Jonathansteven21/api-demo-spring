@@ -46,14 +46,26 @@ public class UserController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    // Update a user
-    @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<User>> updateUser(@PathVariable Long id, @Valid @RequestBody User user) {
-        user.setId(id);
-        user.setRole(Role.USER);
-        User updatedUser = userService.updateUser(user);
+    // Update username of a user by ID.
+    @PutMapping("/{id}/username")
+    public ResponseEntity<ApiResponse<User>> updateUsername(@PathVariable Long id, @RequestParam String newUsername) {
+        User updatedUser = userService.updateUsername(id, newUsername);
+
         updatedUser.setPassword("********");
-        ApiResponse<User> response = new ApiResponse<>(HttpStatus.OK.value(), "User updated successfully", updatedUser);
+
+        ApiResponse<User> response = new ApiResponse<>(HttpStatus.OK.value(), "Username updated successfully", updatedUser);
+        return ResponseEntity.ok(response);
+    }
+
+    // Update password of a user by ID.
+    @PutMapping("/{id}/password")
+    public ResponseEntity<ApiResponse<User>> updatePassword(@PathVariable Long id, @RequestParam String newPassword) {
+        User updatedUser = userService.updatePassword(id, newPassword);
+
+        // Clear sensitive information from response (e.g., password)
+        updatedUser.setPassword("********");
+
+        ApiResponse<User> response = new ApiResponse<>(HttpStatus.OK.value(), "Password updated successfully", updatedUser);
         return ResponseEntity.ok(response);
     }
 
