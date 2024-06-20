@@ -98,6 +98,52 @@ class UserServiceTest {
     }
 
     /**
+     * Test updating a user's username.
+     */
+    @Test
+    void updateUsername() {
+        String newUsername = "newUsername";
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        user.setUsername(newUsername);
+        when(userRepository.saveAndFlush(any(User.class))).thenReturn(user);
+
+        User updatedUser = userService.updateUsername(1L, newUsername);
+
+        assertNotNull(updatedUser);
+        assertEquals(newUsername, updatedUser.getUsername());
+    }
+
+    /**
+     * Test updating a user's password.
+     */
+    @Test
+    void updatePassword() {
+        String newPassword = "newPassword";
+        String originalPassword = user.getPassword();
+
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        user.setPassword(newPassword);
+        when(userRepository.saveAndFlush(any(User.class))).thenReturn(user);
+
+        User updatedUser = userService.updatePassword(1L, user);
+
+        assertNotNull(updatedUser);
+        assertNotEquals(originalPassword, updatedUser.getPassword());
+    }
+
+    /**
+     * Test updating a user's password when the user does not exist.
+     */
+    @Test
+    void updatePassword_UserNotFound() {
+        String newPassword = "newPassword";
+
+        when(userRepository.findById(2L)).thenReturn(Optional.empty());
+
+        assertThrows(NotFoundException.class, () -> userService.updatePassword(2L, user));
+    }
+
+    /**
      * Test creating a user.
      */
     @Test

@@ -1,6 +1,8 @@
 package online.lcelectronics.api.user;
 
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 import online.lcelectronics.api.exceptions.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,17 +52,25 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    // Update a user
+    // Update username for a user
     @Transactional
-    public User updateUser(User user) {
-        User existingUser = userRepository.findById(user.getId())
-                .orElseThrow(() -> new NotFoundException("User not found with ID: " + user.getId()));
+    public User updateUsername(Long userId,@NotEmpty(message = "Username cannot be empty") String newUsername) {
+        User existingUser = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("User not found with ID: " + userId));
 
-        if (!new BCryptPasswordEncoder().matches(user.getPassword(), existingUser.getPassword())) {
-            user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
-        }
+        existingUser.setUsername(newUsername);
+        return userRepository.saveAndFlush(existingUser);
+    }
 
-        return userRepository.saveAndFlush(user);
+    // Update password for a user
+    @Transactional
+    public User updatePassword(Long userId, @Valid User user) {
+        User existingUser = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("User not found with ID: " + userId));
+
+        existingUser.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
+
+        return userRepository.saveAndFlush(existingUser);
     }
 
     // Delete a user
