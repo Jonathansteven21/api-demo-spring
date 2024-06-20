@@ -1,6 +1,8 @@
 package online.lcelectronics.api.user;
 
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 import online.lcelectronics.api.exceptions.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +54,7 @@ public class UserService {
 
     // Update username for a user
     @Transactional
-    public User updateUsername(Long userId, String newUsername) {
+    public User updateUsername(Long userId,@NotEmpty(message = "Username cannot be empty") String newUsername) {
         User existingUser = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("User not found with ID: " + userId));
 
@@ -62,11 +64,11 @@ public class UserService {
 
     // Update password for a user
     @Transactional
-    public User updatePassword(Long userId, String newPassword) {
+    public User updatePassword(Long userId, @Valid User user) {
         User existingUser = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("User not found with ID: " + userId));
 
-        existingUser.setPassword(new BCryptPasswordEncoder().encode(newPassword));
+        existingUser.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
 
         return userRepository.saveAndFlush(existingUser);
     }

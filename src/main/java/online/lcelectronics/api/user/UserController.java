@@ -60,7 +60,10 @@ public class UserController {
     // Update password of a user by ID.
     @PutMapping("/{id}/password")
     public ResponseEntity<ApiResponse<User>> updatePassword(@PathVariable Long id, @RequestParam String newPassword) {
-        User updatedUser = userService.updatePassword(id, newPassword);
+        User auxUser = new User();
+        auxUser.setUsername("null");
+        auxUser.setPassword(newPassword);
+        User updatedUser = userService.updatePassword(id, auxUser);
 
         // Clear sensitive information from response (e.g., password)
         updatedUser.setPassword("********");

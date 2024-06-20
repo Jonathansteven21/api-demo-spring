@@ -125,7 +125,7 @@ class UserServiceTest {
         user.setPassword(newPassword);
         when(userRepository.saveAndFlush(any(User.class))).thenReturn(user);
 
-        User updatedUser = userService.updatePassword(1L, newPassword);
+        User updatedUser = userService.updatePassword(1L, user);
 
         assertNotNull(updatedUser);
         assertNotEquals(originalPassword, updatedUser.getPassword());
@@ -140,7 +140,7 @@ class UserServiceTest {
 
         when(userRepository.findById(2L)).thenReturn(Optional.empty());
 
-        assertThrows(NotFoundException.class, () -> userService.updatePassword(2L, newPassword));
+        assertThrows(NotFoundException.class, () -> userService.updatePassword(2L, user));
     }
 
     /**

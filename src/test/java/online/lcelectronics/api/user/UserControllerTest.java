@@ -95,7 +95,7 @@ class UserControllerTest {
         User user = new User();
         user.setPassword(newPassword);
 
-        when(userService.updatePassword(anyLong(), anyString())).thenReturn(user);
+        when(userService.updatePassword(anyLong(), any(User.class))).thenReturn(user);
 
         ResponseEntity<ApiResponse<User>> responseEntity = userController.updatePassword(1L, newPassword);
 
