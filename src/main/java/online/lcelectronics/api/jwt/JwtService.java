@@ -3,6 +3,7 @@ package online.lcelectronics.api.jwt;
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -21,7 +22,9 @@ public class JwtService {
     private static final int EXPIRATION_TIME_SECONDS= 7200;
 
     public String getToken(UserDetails user) {
-        return getToken(new HashMap<>(), user);
+        Map<String, Object> extraClaims = new HashMap<>();
+        extraClaims.put("roles", user.getAuthorities());
+        return getToken(extraClaims, user);
     }
 
     private String getToken(Map<String,Object> extraClaims, UserDetails user) {
