@@ -61,6 +61,6 @@ public class Order {
     private OrderStatus status;
 
     // Unique reference code (access key)
-    @Column(unique = true, nullable = false, length = 20)
+    @Column(unique = true, nullable = false, length = 36)
     private String referenceCode;
 }
