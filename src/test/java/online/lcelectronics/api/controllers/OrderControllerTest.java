@@ -46,46 +46,97 @@ class OrderControllerTest {
         order.setCreatedDate(LocalDate.now());
     }
 
+    /**
+     * Test for verifying the retrieval of all orders.
+     * It mocks the OrderService to return a predefined list of orders and
+     * verifies the response from the controller.
+     */
     @Test
     void getAllOrders() {
+        // Arrange
         List<Order> orders = Arrays.asList(order);
         when(orderService.getAllOrders()).thenReturn(orders);
 
+        // Act
         ResponseEntity<ApiResponse<List<Order>>> responseEntity = orderController.getAllOrders();
 
+        // Assert
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals(orders, responseEntity.getBody().getData());
     }
 
+    /**
+     * Test for verifying the retrieval of an order by its ID.
+     * It mocks the OrderService to return a predefined order and
+     * verifies the response from the controller.
+     */
     @Test
     void getOrderById() {
+        // Arrange
         Integer orderId = 1;
         when(orderService.getOrderById(orderId)).thenReturn(order);
 
+        // Act
         ResponseEntity<ApiResponse<Order>> responseEntity = orderController.getOrderById(orderId);
 
+        // Assert
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals(order, responseEntity.getBody().getData());
     }
 
+    /**
+     * Test for verifying the retrieval of an order by its reference code.
+     * It mocks the OrderService to return a predefined order and
+     * verifies the response from the controller.
+     */
+    @Test
+    void getOrderByReferenceCode() {
+        // Arrange
+        String referenceCode = "ref123";
+        when(orderService.getOrderByReferenceCode(referenceCode)).thenReturn(order);
+
+        // Act
+        ResponseEntity<ApiResponse<Order>> responseEntity = orderController.getOrderByReferenceCode(referenceCode);
+
+        // Assert
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals(order, responseEntity.getBody().getData());
+    }
+
+    /**
+     * Test for verifying the saving of an order.
+     * It mocks the OrderService to return the saved order and
+     * verifies the response from the controller.
+     */
     @Test
     void saveOrder() {
+        // Arrange
         when(orderService.saveOrder(order)).thenReturn(order);
 
+        // Act
         ResponseEntity<ApiResponse<Order>> responseEntity = orderController.saveOrder(order);
 
+        // Assert
         assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
         assertEquals(order, responseEntity.getBody().getData());
     }
 
+    /**
+     * Test for verifying the update of an order's status.
+     * It mocks the OrderService to return the updated order and
+     * verifies the response from the controller.
+     */
     @Test
     void updateOrderStatus() {
+        // Arrange
         Integer orderId = 1;
         OrderStatus status = OrderStatus.COMPLETED;
         when(orderService.updateOrderStatus(orderId, status)).thenReturn(order);
 
+        // Act
         ResponseEntity<ApiResponse<Order>> responseEntity = orderController.updateOrderStatus(orderId, status);
 
+        // Assert
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals(order, responseEntity.getBody().getData());
     }
