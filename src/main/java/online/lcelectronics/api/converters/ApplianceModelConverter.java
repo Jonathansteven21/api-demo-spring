@@ -44,19 +44,4 @@ public class ApplianceModelConverter {
             return Component.values();
         }
     }
-
-    /**
-     * Converts an ApplianceModelDTO to its corresponding entity.
-     * @param dto The ApplianceModelDTO to convert.
-     * @return The converted ApplianceModel entity.
-     */
-    public ApplianceModel toEntity(ApplianceModelDTO dto) {
-        ApplianceModel entity = new ApplianceModel();
-        entity.setId(dto.getId());
-        entity.setModel(dto.getModel());
-        entity.setApplianceCategory(dto.getApplianceCategory());
-        entity.setBrand(dto.getBrand());
-        entity.setManufactureYear(dto.getYear());
-        return entity;
-    }
 }

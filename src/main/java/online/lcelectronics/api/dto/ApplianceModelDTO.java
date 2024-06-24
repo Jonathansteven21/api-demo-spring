@@ -1,7 +1,5 @@
 package online.lcelectronics.api.dto;
 
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,7 +9,6 @@ import online.lcelectronics.api.enums.Brand;
 import online.lcelectronics.api.enums.Component;
 
 import java.time.Year;
-import java.util.List;
 
 /**
  * This class represents a DTO (Data Transfer Object) for the ApplianceModel entity.
