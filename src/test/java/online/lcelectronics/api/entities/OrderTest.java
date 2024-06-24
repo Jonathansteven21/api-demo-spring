@@ -43,6 +43,7 @@ class OrderTest {
         order.setHistoricAppliance(historicAppliance);
         order.setImages(images);
         order.setStatus(OrderStatus.COMPLETED);
+        order.setReferenceCode("unique-reference-code");
     }
 
     /**
@@ -59,6 +60,7 @@ class OrderTest {
         assertEquals(1, order.getImages().size());
         assertEquals(image, order.getImages().get(0));
         assertEquals(OrderStatus.COMPLETED, order.getStatus());
+        assertEquals("unique-reference-code", order.getReferenceCode());
         // Ensure createdDate is null
         assertNull(order.getCreatedDate());
     }
@@ -76,6 +78,20 @@ class OrderTest {
         assertEquals(1, violations.size());
         ConstraintViolation<Order> violation = violations.iterator().next();
         assertEquals("Client must not be null", violation.getMessage());
+    }
+
+    /**
+     * Tests validation when the reference code is null.
+     * Ensures a constraint violation occurs when the reference code is null.
+     */
+    @Test
+    void whenReferenceCodeIsNull_thenOneConstraintViolation() {
+        order.setReferenceCode(null);
+
+        Set<ConstraintViolation<Order>> violations = validator.validate(order);
+        assertEquals(1, violations.size());
+        ConstraintViolation<Order> violation = violations.iterator().next();
+        assertEquals("ReferenceCode must not be null", violation.getMessage());
     }
 
     /**

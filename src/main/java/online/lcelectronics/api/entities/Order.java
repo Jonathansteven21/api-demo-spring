@@ -59,4 +59,9 @@ public class Order {
     @Enumerated(EnumType.STRING)
     @NotNull(message = "Status must not be null")
     private OrderStatus status;
+
+    // Unique reference code (access key)
+    @Column(unique = true, nullable = false, length = 36)
+    @NotNull(message = "ReferenceCode must not be null")
+    private String referenceCode;
 }

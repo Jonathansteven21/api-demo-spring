@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @Validated
@@ -38,6 +39,11 @@ public class OrderService {
     public Order getOrderById(@NotNull(message = "ID cannot be null") Integer id) {
         return orderRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Order not found with ID: " + id));
+    }
+
+    public Order getOrderByReferenceCode(@NotNull String referenceCode) {
+        return orderRepository.findByReferenceCode(referenceCode)
+                .orElseThrow(() -> new NotFoundException("Order not found with reference code: " + referenceCode));
     }
 
     // Retrieves a list of orders based on the provided criteria.
@@ -83,6 +89,8 @@ public class OrderService {
     @Transactional
     public Order saveOrder(Order order) {
         validateOrder(order);
+        String referenceCode = UUID.randomUUID().toString();
+        order.setReferenceCode(referenceCode);
         return orderRepository.save(order);
     }
 
