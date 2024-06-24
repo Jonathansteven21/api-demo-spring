@@ -84,6 +84,30 @@ class OrderServiceTest {
     }
 
     /**
+     * Tests the getOrderByReferenceCode method of OrderService when the order exists.
+     * Verifies that the correct order is returned.
+     */
+    @Test
+    void getOrderByReferenceCode_existingReferenceCode() {
+        Order order = new Order();
+        when(orderRepository.findByReferenceCode("unique-reference-code")).thenReturn(Optional.of(order));
+
+        Order result = orderService.getOrderByReferenceCode("unique-reference-code");
+        assertEquals(order, result);
+    }
+
+    /**
+     * Tests the getOrderByReferenceCode method of OrderService when the order does not exist.
+     * Ensures that a NotFoundException is thrown.
+     */
+    @Test
+    void getOrderByReferenceCode_nonExistingReferenceCode() {
+        when(orderRepository.findByReferenceCode("non-existent-code")).thenReturn(Optional.empty());
+
+        assertThrows(NotFoundException.class, () -> orderService.getOrderByReferenceCode("non-existent-code"));
+    }
+
+    /**
      * Tests the getOrdersByCriteria method of OrderService.
      * Verifies that orders matching the criteria are returned.
      */
@@ -107,10 +131,11 @@ class OrderServiceTest {
     @Test
     void saveOrder_validOrder() {
         Order order = new Order();
-        when(orderRepository.save(order)).thenReturn(order);
+        when(orderRepository.save(any(Order.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
         Order result = orderService.saveOrder(order);
         assertNotNull(result);
+        assertNotNull(result.getReferenceCode());
     }
 
     /**

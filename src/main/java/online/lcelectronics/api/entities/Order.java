@@ -62,5 +62,6 @@ public class Order {
 
     // Unique reference code (access key)
     @Column(unique = true, nullable = false, length = 36)
+    @NotNull(message = "ReferenceCode must not be null")
     private String referenceCode;
 }

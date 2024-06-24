@@ -40,6 +40,14 @@ public class OrderController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    // Get order by reference code
+    @GetMapping("/reference/{referenceCode}")
+    public ResponseEntity<ApiResponse<Order>> getOrderByReferenceCode(@PathVariable String referenceCode) {
+        Order order = orderService.getOrderByReferenceCode(referenceCode);
+        ApiResponse<Order> response = new ApiResponse<>(HttpStatus.OK.value(), "Order retrieved successfully", order);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
     // Get orders by criteria
     @GetMapping("/search")
     public ResponseEntity<ApiResponse<List<Order>>> getOrdersByCriteria(
