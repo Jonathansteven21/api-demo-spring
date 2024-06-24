@@ -1,5 +1,9 @@
 package online.lcelectronics.api.controllers;
 
+import online.lcelectronics.api.converters.ClientConverter;
+import online.lcelectronics.api.converters.OrderConverter;
+import online.lcelectronics.api.dto.ClientDTO;
+import online.lcelectronics.api.dto.OrderDTO;
 import online.lcelectronics.api.entities.Client;
 import online.lcelectronics.api.entities.HistoricAppliance;
 import online.lcelectronics.api.entities.Order;
@@ -27,6 +31,12 @@ class OrderControllerTest {
 
     @Mock
     private OrderService orderService;
+
+    @Mock
+    private OrderConverter orderConverter;
+
+    @Mock
+    private ClientConverter clientConverter;
 
     @InjectMocks
     private OrderController orderController;
@@ -93,14 +103,27 @@ class OrderControllerTest {
     void getOrderByReferenceCode() {
         // Arrange
         String referenceCode = "ref123";
+
+        // Mock the conversion process
         when(orderService.getOrderByReferenceCode(referenceCode)).thenReturn(order);
 
+        OrderDTO orderDTO = new OrderDTO();
+        orderDTO.setId(order.getId());
+        // Optionally mock client conversion
+        ClientDTO clientDTO = new ClientDTO();
+        clientDTO.setIdentityCard(order.getClient().getIdentityCard());
+        clientDTO.setName(order.getClient().getName());
+        when(clientConverter.toDto(order.getClient())).thenReturn(clientDTO);
+        orderDTO.setClient(clientDTO);
+
+        when(orderConverter.toDto(order)).thenReturn(orderDTO);
+
         // Act
-        ResponseEntity<ApiResponse<Order>> responseEntity = orderController.getOrderByReferenceCode(referenceCode);
+        ResponseEntity<ApiResponse<OrderDTO>> responseEntity = orderController.getOrderByReferenceCode(referenceCode);
 
         // Assert
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        assertEquals(order, responseEntity.getBody().getData());
+        assertEquals(orderDTO, responseEntity.getBody().getData());
     }
 
     /**

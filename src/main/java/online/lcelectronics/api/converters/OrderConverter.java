@@ -11,8 +11,6 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class OrderConverter {
 
-    private ClientConverter clientConverter;
-
     /**
      * Converts an Order entity to its corresponding DTO.
      * @param order The Order entity to convert.
@@ -21,7 +19,6 @@ public class OrderConverter {
     public OrderDTO toDto(Order order) {
         OrderDTO dto = new OrderDTO();
         dto.setId(order.getId());
-        dto.setClient(clientConverter.toDto(order.getClient()));
         dto.setIssue(order.getIssue());
         dto.setProductReceivedNotes(order.getProductReceivedNotes());
         dto.setHistoricAppliance(order.getHistoricAppliance());

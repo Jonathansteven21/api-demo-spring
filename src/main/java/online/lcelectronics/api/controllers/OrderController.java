@@ -2,6 +2,9 @@ package online.lcelectronics.api.controllers;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import online.lcelectronics.api.converters.ClientConverter;
+import online.lcelectronics.api.converters.OrderConverter;
+import online.lcelectronics.api.dto.OrderDTO;
 import online.lcelectronics.api.entities.Client;
 import online.lcelectronics.api.entities.HistoricAppliance;
 import online.lcelectronics.api.entities.Order;
@@ -23,6 +26,8 @@ import java.util.List;
 public class OrderController {
 
     private final OrderService orderService;
+    private final OrderConverter orderConverter;
+    private final ClientConverter clientConverter;
 
     // Get all orders
     @GetMapping
@@ -42,9 +47,11 @@ public class OrderController {
 
     // Get order by reference code
     @GetMapping("/reference/{referenceCode}")
-    public ResponseEntity<ApiResponse<Order>> getOrderByReferenceCode(@PathVariable String referenceCode) {
+    public ResponseEntity<ApiResponse<OrderDTO>> getOrderByReferenceCode(@PathVariable String referenceCode) {
         Order order = orderService.getOrderByReferenceCode(referenceCode);
-        ApiResponse<Order> response = new ApiResponse<>(HttpStatus.OK.value(), "Order retrieved successfully", order);
+        OrderDTO orderDTO = orderConverter.toDto(order);
+        orderDTO.setClient(clientConverter.toDto(order.getClient()));
+        ApiResponse<OrderDTO> response = new ApiResponse<>(HttpStatus.OK.value(), "Order retrieved successfully", orderDTO);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
