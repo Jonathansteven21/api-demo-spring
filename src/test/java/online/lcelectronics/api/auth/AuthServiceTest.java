@@ -1,6 +1,7 @@
 package online.lcelectronics.api.auth;
 
 import online.lcelectronics.api.jwt.JwtService;
+import online.lcelectronics.api.user.Role;
 import online.lcelectronics.api.user.User;
 import online.lcelectronics.api.user.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -49,6 +50,7 @@ class AuthServiceTest {
         User user = new User();
         user.setUsername("testUser");
         user.setPassword("testPass");
+        user.setRole(Role.ADMIN);
         when(userRepository.findByUsername(loginRequest.getUsername())).thenReturn(Optional.of(user));
         when(jwtService.getToken(user)).thenReturn("mockToken");
 
