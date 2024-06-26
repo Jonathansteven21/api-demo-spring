@@ -62,10 +62,9 @@ public class Order {
 
     // Indicates if the order is under warranty
     @Column(nullable = false)
-    private boolean warranty;
+    private Boolean warranty;
 
     // Unique reference code (access key)
     @Column(unique = true, nullable = false, length = 36)
-    @NotNull(message = "ReferenceCode must not be null")
     private String referenceCode;
 }
