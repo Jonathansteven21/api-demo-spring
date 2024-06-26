@@ -1,5 +1,6 @@
 package online.lcelectronics.api.dto;
 
+import jakarta.persistence.Column;
 import lombok.*;
 import online.lcelectronics.api.entities.HistoricAppliance;
 import online.lcelectronics.api.entities.Image;
@@ -40,6 +41,10 @@ public class OrderDTO {
     // Date when the order was created
     private LocalDate createdDate;
 
+    // Indicates if the order is under warranty
+    private Boolean warranty;
+
     // Status of the order
     private OrderStatus status;
+
 }

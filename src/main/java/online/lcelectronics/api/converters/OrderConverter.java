@@ -25,6 +25,7 @@ public class OrderConverter {
         dto.setImages(order.getImages());
         dto.setCreatedDate(order.getCreatedDate());
         dto.setStatus(order.getStatus());
+        dto.setWarranty(order.getWarranty());
         return dto;
     }
 }
