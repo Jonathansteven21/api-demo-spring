@@ -24,6 +24,7 @@ public class AuthService {
         String token=jwtService.getToken(user);
         return AuthResponse.builder()
                 .token(token)
+                .role(user.getAuthorities().toArray()[0].toString())
                 .build();
 
     }
