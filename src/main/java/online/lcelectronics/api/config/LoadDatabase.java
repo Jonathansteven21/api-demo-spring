@@ -13,10 +13,11 @@ import org.springframework.beans.factory.annotation.Value;
 public class LoadDatabase {
 
     @Bean
-    CommandLineRunner initDatabase(UserService userService, @Value("${app.defaultUser.username}") String username, @Value("${app.defaultUser.password}") String password) {
+    CommandLineRunner initDatabase(UserService userService, @Value("${app.defaultUser.username.admin}") String username, @Value("${app.defaultUser.password.admin}") String password, @Value("${app.defaultUser.username.image}") String usernameImage, @Value("${app.defaultUser.password.image}") String passwordImage) {
         return args -> {
             if (userService.count() == 0) {
-                userService.createUser(new User(null,username, password, Role.ADMIN));
+                userService.createUser(new User(1L,username, password, Role.ADMIN));
+                userService.createUser(new User(2L,usernameImage, passwordImage, Role.IMAGE_EDITOR));
             }
         };
     }

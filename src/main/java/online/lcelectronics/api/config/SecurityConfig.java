@@ -27,6 +27,9 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         String adminRole = Role.ADMIN.toString();
+        String userRole = Role.USER.toString();
+        String imageEditorRole = Role.IMAGE_EDITOR.toString();
+
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authRequest -> authRequest
@@ -38,8 +41,11 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PUT
                                 , "/api/repair-costs/**", "/api/order-history/**", "/api/historic-appliances/**","/api/client-payments/**")
                         .hasAuthority(adminRole)
+                        .requestMatchers(HttpMethod.PUT
+                                , "/api/images/**")
+                        .hasAnyAuthority(adminRole,userRole,imageEditorRole)
                         .requestMatchers(HttpMethod.DELETE, "/api/images").hasAuthority(adminRole)
-                        .anyRequest().authenticated())
+                        .anyRequest().hasAnyAuthority(adminRole,userRole))
                 .sessionManagement(sessionManager -> sessionManager
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authProvider)
