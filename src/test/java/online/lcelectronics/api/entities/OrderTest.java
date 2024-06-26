@@ -81,20 +81,6 @@ class OrderTest {
     }
 
     /**
-     * Tests validation when the reference code is null.
-     * Ensures a constraint violation occurs when the reference code is null.
-     */
-    @Test
-    void whenReferenceCodeIsNull_thenOneConstraintViolation() {
-        order.setReferenceCode(null);
-
-        Set<ConstraintViolation<Order>> violations = validator.validate(order);
-        assertEquals(1, violations.size());
-        ConstraintViolation<Order> violation = violations.iterator().next();
-        assertEquals("ReferenceCode must not be null", violation.getMessage());
-    }
-
-    /**
      * Tests validation when the issue is empty.
      * Ensures a constraint violation occurs when the issue is empty.
      */

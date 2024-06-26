@@ -78,6 +78,10 @@ public class OrderService {
             spec = spec.and(OrderSpecification.withCreatedDate(order.getCreatedDate()));
         }
 
+        if (order.getWarranty() != null) {
+            spec = spec.and(OrderSpecification.withWarranty(order.getWarranty()));
+        }
+
         List<Order> orderList = orderRepository.findAll(spec);
         if (orderList.isEmpty()) {
             throw new NotFoundException("Orders not found with these specifications");

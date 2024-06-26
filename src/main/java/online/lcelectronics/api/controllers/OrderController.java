@@ -62,6 +62,7 @@ public class OrderController {
             @RequestParam(required = false) Long clientIdentityCard,
             @RequestParam(required = false) String historicApplianceSerial,
             @RequestParam(required = false) OrderStatus status,
+            @RequestParam(required = false) Boolean warranty,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate createdDate) {
 
         Order order = new Order();
@@ -78,6 +79,7 @@ public class OrderController {
         }
         order.setStatus(status);
         order.setCreatedDate(createdDate);
+        order.setWarranty(warranty);
 
         List<Order> orders = orderService.getOrdersByCriteria(order);
         ApiResponse<List<Order>> response = new ApiResponse<>(HttpStatus.OK.value(), "Orders found", orders);
@@ -89,6 +91,9 @@ public class OrderController {
     public ResponseEntity<ApiResponse<Order>> saveOrder(@Valid @RequestBody Order order) {
         order.setId(null);
         order.setCreatedDate(null);
+        if (order.getWarranty()==null){
+            order.setWarranty(false);
+        }
         Order savedOrder = orderService.saveOrder(order);
         ApiResponse<Order> response = new ApiResponse<>(HttpStatus.CREATED.value(), "Order created successfully", savedOrder);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
