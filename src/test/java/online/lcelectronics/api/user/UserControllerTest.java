@@ -1,8 +1,5 @@
-package online.lcelectronics.api.controllers;
+package online.lcelectronics.api.user;
 
-import online.lcelectronics.api.user.User;
-import online.lcelectronics.api.user.UserController;
-import online.lcelectronics.api.user.UserService;
 import online.lcelectronics.api.util.ApiResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -72,25 +69,38 @@ class UserControllerTest {
     }
 
     /**
-     * Test for updating a user when the user is found.
+     * Test for updating the username when the user is found.
      */
     @Test
-    void updateUser_UserFound() {
-        // Create a user instance with ID and updated properties
+    void updateUsername_UserFound() {
+        String newUsername = "updatedUser";
         User user = new User();
-        user.setId(1L);
-        user.setUsername("updatedUser");
-        user.setPassword("updatedPassword");
+        user.setUsername(newUsername);
 
-        // Mock service method to return the updated user
-        when(userService.updateUser(any(User.class))).thenReturn(user);
+        when(userService.updateUsername(anyLong(), anyString())).thenReturn(user);
 
-        // Call the controller method
-        ResponseEntity<ApiResponse<User>> responseEntity = userController.updateUser(1L, user);
+        ResponseEntity<ApiResponse<User>> responseEntity = userController.updateUsername(1L, newUsername);
 
-        // Verify that the response is successful and contains the updated user
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        assertEquals(user, Objects.requireNonNull(responseEntity.getBody()).getData());
+        assertEquals(newUsername, Objects.requireNonNull(responseEntity.getBody()).getData().getUsername());
+        assertEquals("********", Objects.requireNonNull(responseEntity.getBody()).getData().getPassword());
+    }
+
+    /**
+     * Test for updating the password when the user is found.
+     */
+    @Test
+    void updatePassword_UserFound() {
+        String newPassword = "UpdatedPassword123!";
+        User user = new User();
+        user.setPassword(newPassword);
+
+        when(userService.updatePassword(anyLong(), any(User.class))).thenReturn(user);
+
+        ResponseEntity<ApiResponse<User>> responseEntity = userController.updatePassword(1L, newPassword);
+
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals("********", Objects.requireNonNull(responseEntity.getBody()).getData().getPassword());
     }
 
     /**

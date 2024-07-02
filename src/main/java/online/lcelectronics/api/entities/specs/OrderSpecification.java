@@ -35,4 +35,9 @@ public class OrderSpecification {
     public static Specification<Order> withCreatedDate(LocalDate createdDate) {
         return (root, query, cb) -> cb.equal(root.get("createdDate"), createdDate);
     }
+
+    // Creates a specification to filter orders by warranty.
+    public static Specification<Order> withWarranty(boolean warranty) {
+        return (root, query, cb) -> cb.equal(root.get("warranty"), warranty);
+    }
 }

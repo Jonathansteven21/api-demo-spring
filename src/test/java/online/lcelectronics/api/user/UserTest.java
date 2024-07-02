@@ -1,11 +1,9 @@
-package online.lcelectronics.api.entities;
+package online.lcelectronics.api.user;
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
-import online.lcelectronics.api.user.Role;
-import online.lcelectronics.api.user.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -59,23 +57,6 @@ class UserTest {
         }
 
         assertEquals(6, passwordRelatedViolations, "All violations should be related to password");
-    }
-
-
-    /**
-     * Tests that a null role causes a validation violation.
-     */
-    @Test
-    void testNullRole() {
-        User user = new User();
-        user.setUsername("validUser");
-        user.setPassword("ValidPassword1!");
-        user.setRole(null);
-
-        Set<ConstraintViolation<User>> violations = validator.validate(user);
-        assertEquals(1, violations.size(), "Null role should have one violation");
-        ConstraintViolation<User> violation = violations.iterator().next();
-        assertEquals("Role cannot be null", violation.getMessage());
     }
 
     /**

@@ -40,47 +40,78 @@ class OrderHistoryControllerTest {
         orderHistory.setText("Test order history");
     }
 
+    /**
+     * Test for verifying the retrieval of all order history entries.
+     * It mocks the OrderHistoryService to return a predefined list of order history entries and
+     * verifies the response.
+     */
     @Test
     void getAllOrderHistoryEntries() {
+        // Arrange
         List<OrderHistory> orderHistories = Arrays.asList(orderHistory);
         when(orderHistoryService.getAllOrderHistoryEntries()).thenReturn(orderHistories);
 
+        // Act
         ResponseEntity<ApiResponse<List<OrderHistory>>> responseEntity = orderHistoryController.getAllOrderHistoryEntries();
 
+        // Assert
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals(orderHistories, responseEntity.getBody().getData());
     }
 
+    /**
+     * Test for verifying the retrieval of an order history entry by its ID.
+     * It mocks the OrderHistoryService to return a predefined order history entry and
+     * verifies the response.
+     */
     @Test
     void getOrderHistoryEntryById() {
+        // Arrange
         Integer orderHistoryId = 1;
         when(orderHistoryService.getOrderHistoryEntryById(orderHistoryId)).thenReturn(orderHistory);
 
+        // Act
         ResponseEntity<ApiResponse<OrderHistory>> responseEntity = orderHistoryController.getOrderHistoryEntryById(orderHistoryId);
 
+        // Assert
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals(orderHistory, responseEntity.getBody().getData());
     }
 
+    /**
+     * Test for verifying the saving of a new order history entry.
+     * It mocks the OrderHistoryService to return the saved order history entry and
+     * verifies the response.
+     */
     @Test
     void saveOrderHistoryEntry() {
+        // Arrange
         when(orderHistoryService.saveOrderHistoryEntry(orderHistory)).thenReturn(orderHistory);
 
+        // Act
         ResponseEntity<ApiResponse<OrderHistory>> responseEntity = orderHistoryController.saveOrderHistoryEntry(orderHistory);
 
+        // Assert
         assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
         assertEquals(orderHistory, responseEntity.getBody().getData());
     }
 
+    /**
+     * Test for verifying the update of an existing order history entry.
+     * It mocks the OrderHistoryService to return the updated order history entry and
+     * verifies the response.
+     */
     @Test
     void updateOrderHistoryEntry() {
+        // Arrange
         Integer orderHistoryId = 1;
         when(orderHistoryService.updateOrderHistoryEntry(any(OrderHistory.class))).thenReturn(orderHistory);
 
+        // Act
         ResponseEntity<ApiResponse<OrderHistory>> responseEntity = orderHistoryController.updateOrderHistoryEntry(orderHistoryId, orderHistory);
 
+        // Assert
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals(orderHistory, responseEntity.getBody().getData());
     }
 }
-

@@ -1,18 +1,12 @@
-package online.lcelectronics.api.services;
+package online.lcelectronics.api.user;
 
-import online.lcelectronics.api.user.User;
-import online.lcelectronics.api.user.Role;
 import online.lcelectronics.api.exceptions.NotFoundException;
-import online.lcelectronics.api.user.UserRepository;
-import online.lcelectronics.api.user.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.Collections;
 import java.util.List;
@@ -104,6 +98,52 @@ class UserServiceTest {
     }
 
     /**
+     * Test updating a user's username.
+     */
+    @Test
+    void updateUsername() {
+        String newUsername = "newUsername";
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        user.setUsername(newUsername);
+        when(userRepository.saveAndFlush(any(User.class))).thenReturn(user);
+
+        User updatedUser = userService.updateUsername(1L, newUsername);
+
+        assertNotNull(updatedUser);
+        assertEquals(newUsername, updatedUser.getUsername());
+    }
+
+    /**
+     * Test updating a user's password.
+     */
+    @Test
+    void updatePassword() {
+        String newPassword = "newPassword";
+        String originalPassword = user.getPassword();
+
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        user.setPassword(newPassword);
+        when(userRepository.saveAndFlush(any(User.class))).thenReturn(user);
+
+        User updatedUser = userService.updatePassword(1L, user);
+
+        assertNotNull(updatedUser);
+        assertNotEquals(originalPassword, updatedUser.getPassword());
+    }
+
+    /**
+     * Test updating a user's password when the user does not exist.
+     */
+    @Test
+    void updatePassword_UserNotFound() {
+        String newPassword = "newPassword";
+
+        when(userRepository.findById(2L)).thenReturn(Optional.empty());
+
+        assertThrows(NotFoundException.class, () -> userService.updatePassword(2L, user));
+    }
+
+    /**
      * Test creating a user.
      */
     @Test
@@ -115,31 +155,6 @@ class UserServiceTest {
         assertNotNull(result);
         assertEquals(user.getUsername(), result.getUsername());
         assertNotEquals("testPassword", result.getPassword()); // Verify that the password has been encoded
-    }
-
-    /**
-     * Test updating a user when the user exists.
-     */
-    @Test
-    void updateUser_UserFound() {
-        when(userRepository.existsById(1L)).thenReturn(true);
-        when(userRepository.saveAndFlush(any(User.class))).thenAnswer(i -> i.getArguments()[0]);
-
-        User result = userService.updateUser(user);
-
-        assertNotNull(result);
-        assertEquals(user.getUsername(), result.getUsername());
-        assertNotEquals("testPassword", result.getPassword()); // Verify that the password has been encoded
-    }
-
-    /**
-     * Test updating a user when the user does not exist.
-     */
-    @Test
-    void updateUser_UserNotFound() {
-        when(userRepository.existsById(1L)).thenReturn(false);
-
-        assertThrows(NotFoundException.class, () -> userService.updateUser(user));
     }
 
     /**

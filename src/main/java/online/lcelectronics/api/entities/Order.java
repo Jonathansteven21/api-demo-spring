@@ -59,4 +59,12 @@ public class Order {
     @Enumerated(EnumType.STRING)
     @NotNull(message = "Status must not be null")
     private OrderStatus status;
+
+    // Indicates if the order is under warranty
+    @Column(nullable = false)
+    private Boolean warranty;
+
+    // Unique reference code (access key)
+    @Column(unique = true, nullable = false, length = 36)
+    private String referenceCode;
 }

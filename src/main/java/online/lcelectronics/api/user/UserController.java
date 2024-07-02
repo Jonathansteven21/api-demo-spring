@@ -2,8 +2,8 @@ package online.lcelectronics.api.user;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import online.lcelectronics.api.auth.AuthService;
 import online.lcelectronics.api.util.ApiResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -14,7 +14,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/users")
 @Validated
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@RequiredArgsConstructor
 public class UserController {
 
     private final UserService userService;
@@ -39,17 +39,36 @@ public class UserController {
     @PostMapping
     public ResponseEntity<ApiResponse<User>> createUser(@Valid @RequestBody User user) {
         user.setId(null);
-//        User newUser = userService.createUser(user);
-        ApiResponse<User> response = new ApiResponse<>(HttpStatus.CREATED.value(), "User created successfully", null);
+        user.setRole(Role.USER);
+        User newUser = userService.createUser(user);
+        newUser.setPassword("********");
+        ApiResponse<User> response = new ApiResponse<>(HttpStatus.CREATED.value(), "User created successfully", newUser);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    // Update a user
-    @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<User>> updateUser(@PathVariable Long id, @Valid @RequestBody User user) {
-        user.setId(id);
-        User updatedUser = userService.updateUser(user);
-        ApiResponse<User> response = new ApiResponse<>(HttpStatus.OK.value(), "User updated successfully", updatedUser);
+    // Update username of a user by ID.
+    @PutMapping("/{id}/username")
+    public ResponseEntity<ApiResponse<User>> updateUsername(@PathVariable Long id, @RequestParam String newUsername) {
+        User updatedUser = userService.updateUsername(id, newUsername);
+
+        updatedUser.setPassword("********");
+
+        ApiResponse<User> response = new ApiResponse<>(HttpStatus.OK.value(), "Username updated successfully", updatedUser);
+        return ResponseEntity.ok(response);
+    }
+
+    // Update password of a user by ID.
+    @PutMapping("/{id}/password")
+    public ResponseEntity<ApiResponse<User>> updatePassword(@PathVariable Long id, @RequestParam String newPassword) {
+        User auxUser = new User();
+        auxUser.setUsername("null");
+        auxUser.setPassword(newPassword);
+        User updatedUser = userService.updatePassword(id, auxUser);
+
+        // Clear sensitive information from response (e.g., password)
+        updatedUser.setPassword("********");
+
+        ApiResponse<User> response = new ApiResponse<>(HttpStatus.OK.value(), "Password updated successfully", updatedUser);
         return ResponseEntity.ok(response);
     }
 

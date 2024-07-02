@@ -1,6 +1,8 @@
 package online.lcelectronics.api.user;
 
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 import online.lcelectronics.api.exceptions.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +14,7 @@ import java.util.List;
 
 @Service
 @Validated
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
@@ -42,18 +44,33 @@ public class UserService {
     // Save a new user
     @Transactional
     public User createUser(User user) {
+        String username = user.getUsername();
+        if (userRepository.findByUsername(username).isPresent()) {
+            throw new IllegalArgumentException("User with username " + username + " already exists");
+        }
         user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
         return userRepository.save(user);
     }
 
-    // Update a user
+    // Update username for a user
     @Transactional
-    public User updateUser(User user) {
-        if (!userRepository.existsById(user.getId())) {
-            throw new NotFoundException("User not found with ID: " + user.getId());
-        }
-        user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
-        return userRepository.saveAndFlush(user);
+    public User updateUsername(Long userId,@NotEmpty(message = "Username cannot be empty") String newUsername) {
+        User existingUser = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("User not found with ID: " + userId));
+
+        existingUser.setUsername(newUsername);
+        return userRepository.saveAndFlush(existingUser);
+    }
+
+    // Update password for a user
+    @Transactional
+    public User updatePassword(Long userId, @Valid User user) {
+        User existingUser = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("User not found with ID: " + userId));
+
+        existingUser.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
+
+        return userRepository.saveAndFlush(existingUser);
     }
 
     // Delete a user

@@ -3,12 +3,9 @@ package online.lcelectronics.api.auth;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import online.lcelectronics.api.jwt.JwtService;
-import online.lcelectronics.api.user.Role;
-import online.lcelectronics.api.user.User;
 import online.lcelectronics.api.user.UserRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -19,7 +16,6 @@ public class AuthService {
 
     private final UserRepository userRepository;
     private final JwtService jwtService;
-    private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
 
     public AuthResponse login(LoginRequest request) {
@@ -28,23 +24,8 @@ public class AuthService {
         String token=jwtService.getToken(user);
         return AuthResponse.builder()
                 .token(token)
+                .role(user.getAuthorities().toArray()[0].toString())
                 .build();
 
     }
-
-    public AuthResponse register(RegisterRequest request) {
-        User user = User.builder()
-                .username(request.getUsername())
-                .password(passwordEncoder.encode( request.getPassword()))
-                .role(Role.USER)
-                .build();
-
-        userRepository.save(user);
-
-        return AuthResponse.builder()
-                .token(jwtService.getToken(user))
-                .build();
-
-    }
-
 }

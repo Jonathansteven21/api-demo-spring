@@ -1,8 +1,5 @@
-package online.lcelectronics.api.repositories;
+package online.lcelectronics.api.user;
 
-import online.lcelectronics.api.user.User;
-import online.lcelectronics.api.user.Role;
-import online.lcelectronics.api.user.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

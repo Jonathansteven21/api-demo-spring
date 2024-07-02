@@ -2,6 +2,9 @@ package online.lcelectronics.api.controllers;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import online.lcelectronics.api.converters.ClientConverter;
+import online.lcelectronics.api.converters.OrderConverter;
+import online.lcelectronics.api.dto.OrderDTO;
 import online.lcelectronics.api.entities.Client;
 import online.lcelectronics.api.entities.HistoricAppliance;
 import online.lcelectronics.api.entities.Order;
@@ -23,6 +26,8 @@ import java.util.List;
 public class OrderController {
 
     private final OrderService orderService;
+    private final OrderConverter orderConverter;
+    private final ClientConverter clientConverter;
 
     // Get all orders
     @GetMapping
@@ -40,6 +45,16 @@ public class OrderController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    // Get order by reference code
+    @GetMapping("/reference/{referenceCode}")
+    public ResponseEntity<ApiResponse<OrderDTO>> getOrderByReferenceCode(@PathVariable String referenceCode) {
+        Order order = orderService.getOrderByReferenceCode(referenceCode);
+        OrderDTO orderDTO = orderConverter.toDto(order);
+        orderDTO.setClient(clientConverter.toDto(order.getClient()));
+        ApiResponse<OrderDTO> response = new ApiResponse<>(HttpStatus.OK.value(), "Order retrieved successfully", orderDTO);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
     // Get orders by criteria
     @GetMapping("/search")
     public ResponseEntity<ApiResponse<List<Order>>> getOrdersByCriteria(
@@ -47,6 +62,7 @@ public class OrderController {
             @RequestParam(required = false) Long clientIdentityCard,
             @RequestParam(required = false) String historicApplianceSerial,
             @RequestParam(required = false) OrderStatus status,
+            @RequestParam(required = false) Boolean warranty,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate createdDate) {
 
         Order order = new Order();
@@ -63,6 +79,7 @@ public class OrderController {
         }
         order.setStatus(status);
         order.setCreatedDate(createdDate);
+        order.setWarranty(warranty);
 
         List<Order> orders = orderService.getOrdersByCriteria(order);
         ApiResponse<List<Order>> response = new ApiResponse<>(HttpStatus.OK.value(), "Orders found", orders);
@@ -74,6 +91,9 @@ public class OrderController {
     public ResponseEntity<ApiResponse<Order>> saveOrder(@Valid @RequestBody Order order) {
         order.setId(null);
         order.setCreatedDate(null);
+        if (order.getWarranty()==null){
+            order.setWarranty(false);
+        }
         Order savedOrder = orderService.saveOrder(order);
         ApiResponse<Order> response = new ApiResponse<>(HttpStatus.CREATED.value(), "Order created successfully", savedOrder);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
