@@ -19,7 +19,7 @@ import io.jsonwebtoken.security.Keys;
 public class JwtService {
 
     private static final Key SECRET_KEY = Keys.secretKeyFor(SignatureAlgorithm.HS256);
-    private static final int EXPIRATION_TIME_SECONDS= 7200;
+    public static final int EXPIRATION_TIME_SECONDS= 7200;
 
     public String getToken(UserDetails user) {
         Map<String, Object> extraClaims = new HashMap<>();
