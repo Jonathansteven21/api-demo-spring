@@ -28,7 +28,7 @@ class AuthControllerTest {
         loginRequest = new LoginRequest("testUser", "testPass");
 
         // Mocking AuthService login method to return a mock AuthResponse
-        AuthResponse authResponse = new AuthResponse("mockToken","ADMIN");
+        AuthResponse authResponse = new AuthResponse("mockToken","ADMIN",100);
         when(authService.login(any(LoginRequest.class))).thenReturn(authResponse);
     }
 

@@ -25,6 +25,7 @@ public class AuthService {
         return AuthResponse.builder()
                 .token(token)
                 .role(user.getAuthorities().toArray()[0].toString())
+                .tokenTime(JwtService.EXPIRATION_TIME_SECONDS)
                 .build();
 
     }
