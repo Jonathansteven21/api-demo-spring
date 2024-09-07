@@ -2,6 +2,7 @@ package online.lcelectronics.api.auth;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,14 @@ public class AuthController {
     public ResponseEntity<Map<String, String>> healthCheck() {
         Map<String, String> response = new HashMap<>();
         response.put("status", "ON");
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/verify-token")
+    public ResponseEntity<Map<String, String>> verifyToken() {
+        Map<String, String> response = new HashMap<>();
+        String role= SecurityContextHolder.getContext().getAuthentication().getAuthorities().toArray()[0].toString();
+        response.put("role", role);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }
