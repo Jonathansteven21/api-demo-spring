@@ -22,10 +22,11 @@ public class AuthService {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
         UserDetails user=userRepository.findByUsername(request.getUsername()).orElseThrow();
         String token=jwtService.getToken(user);
+
         return AuthResponse.builder()
                 .token(token)
                 .role(user.getAuthorities().toArray()[0].toString())
-                .tokenTime(JwtService.EXPIRATION_TIME_SECONDS)
+                .time(JwtService.EXPIRATION_TIME_SECONDS)
                 .build();
 
     }
