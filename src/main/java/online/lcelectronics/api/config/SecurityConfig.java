@@ -33,7 +33,7 @@ public class SecurityConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authRequest -> authRequest
-                        .requestMatchers("/api/auth/verify-token")
+                        .requestMatchers("/api/auth/verify-role","/api/auth/logout")
                         .hasAnyAuthority(adminRole,userRole,imageEditorRole)
                         .requestMatchers("/api/auth/**","/api/orders/reference/**").permitAll()
                         .requestMatchers("/api/users/**").hasAuthority(adminRole)
