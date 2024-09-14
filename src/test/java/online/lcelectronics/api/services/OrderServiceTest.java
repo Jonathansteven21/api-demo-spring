@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.ArrayList;
@@ -214,5 +215,71 @@ class OrderServiceTest {
 
         assertEquals("Order not found with ID: " + orderId, exception.getMessage());
         verify(orderRepository, never()).saveAndFlush(any(Order.class));
+    }
+
+    /**
+     * Tests the getLastFiveOrders method of OrderService.
+     * Verifies that the last five orders are returned.
+     */
+    @Test
+    void getLastFiveOrders() {
+        // Arrange
+        Pageable pageable = PageRequest.of(0, 5, Sort.by("createdDate").descending());
+        List<Order> orders = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            orders.add(new Order());
+        }
+        Page<Order> orderPage = new PageImpl<>(orders, pageable, 5);
+
+        when(orderRepository.findAll(pageable)).thenReturn(orderPage);
+
+        // Act
+        List<Order> result = orderService.getLastFiveOrders();
+
+        // Assert
+        assertEquals(5, result.size()); // Ensure that 5 orders are returned
+        verify(orderRepository).findAll(pageable); // Verify that the repository method is called
+    }
+
+    /**
+     * Tests the getOrdersByPageable method of OrderService when orders exist.
+     * Verifies that the correct page of orders is returned.
+     */
+    @Test
+    void getOrdersByPageable_existingOrders() {
+        // Arrange
+        Pageable pageable = PageRequest.of(0, 10, Sort.by("createdDate").ascending());
+        List<Order> orders = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            orders.add(new Order());
+        }
+        Page<Order> orderPage = new PageImpl<>(orders, pageable, 10);
+
+        when(orderRepository.findAll(pageable)).thenReturn(orderPage);
+
+        // Act
+        Page<Order> result = orderService.getOrdersByPageable(0, 10, "createdDate", "asc");
+
+        // Assert
+        assertEquals(10, result.getTotalElements()); // Ensure 10 orders are returned
+        assertEquals(orders, result.getContent()); // Ensure the content matches
+        verify(orderRepository).findAll(pageable); // Verify that the repository method is called
+    }
+
+    /**
+     * Tests the getOrdersByPageable method of OrderService when no orders exist.
+     * Ensures that a NotFoundException is thrown.
+     */
+    @Test
+    void getOrdersByPageable_noOrdersFound() {
+        // Arrange
+        Pageable pageable = PageRequest.of(0, 10, Sort.by("createdDate").ascending());
+        Page<Order> emptyPage = Page.empty(pageable);
+
+        when(orderRepository.findAll(pageable)).thenReturn(emptyPage);
+
+        // Act & Assert
+        assertThrows(NotFoundException.class, () -> orderService.getOrdersByPageable(0, 10, "createdDate", "asc"));
+        verify(orderRepository).findAll(pageable); // Verify that the repository method is called
     }
 }

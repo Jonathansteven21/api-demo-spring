@@ -12,6 +12,7 @@ import online.lcelectronics.api.enums.OrderStatus;
 import online.lcelectronics.api.services.OrderService;
 import online.lcelectronics.api.util.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +34,26 @@ public class OrderController {
     @GetMapping
     public ResponseEntity<ApiResponse<List<Order>>> getAllOrders() {
         List<Order> orders = orderService.getAllOrders();
+        ApiResponse<List<Order>> response = new ApiResponse<>(HttpStatus.OK.value(), "Orders retrieved successfully", orders);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    // Get order list by pageable
+    @GetMapping("/pageable")
+    public ResponseEntity<ApiResponse<Page<Order>>> getOrders(
+            @RequestParam Integer page,
+            @RequestParam Integer size,
+            @RequestParam(required = false) String sortBy,
+            @RequestParam(required = false) String sortDirection) {
+        Page<Order> orders = orderService.getOrdersByPageable(page, size, sortBy, sortDirection);
+        ApiResponse<Page<Order>> response = new ApiResponse<>(HttpStatus.OK.value(), "Orders retrieved successfully", orders);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    // Get order list for the last five orders
+    @GetMapping("/last")
+    public ResponseEntity<ApiResponse<List<Order>>> getLastOrders() {
+        List<Order> orders = orderService.getLastFiveOrders();
         ApiResponse<List<Order>> response = new ApiResponse<>(HttpStatus.OK.value(), "Orders retrieved successfully", orders);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

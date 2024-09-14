@@ -13,10 +13,14 @@ import online.lcelectronics.api.util.ApiResponse;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
+import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
@@ -25,7 +29,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.mockito.MockitoAnnotations;
 
 import java.time.LocalDate;
-import java.util.Arrays;
 
 class OrderControllerTest {
 
@@ -56,11 +59,6 @@ class OrderControllerTest {
         order.setCreatedDate(LocalDate.now());
     }
 
-    /**
-     * Test for verifying the retrieval of all orders.
-     * It mocks the OrderService to return a predefined list of orders and
-     * verifies the response from the controller.
-     */
     @Test
     void getAllOrders() {
         // Arrange
@@ -75,11 +73,6 @@ class OrderControllerTest {
         assertEquals(orders, responseEntity.getBody().getData());
     }
 
-    /**
-     * Test for verifying the retrieval of an order by its ID.
-     * It mocks the OrderService to return a predefined order and
-     * verifies the response from the controller.
-     */
     @Test
     void getOrderById() {
         // Arrange
@@ -94,11 +87,6 @@ class OrderControllerTest {
         assertEquals(order, responseEntity.getBody().getData());
     }
 
-    /**
-     * Test for verifying the retrieval of an order by its reference code.
-     * It mocks the OrderService to return a predefined order and
-     * verifies the response from the controller.
-     */
     @Test
     void getOrderByReferenceCode() {
         // Arrange
@@ -126,11 +114,6 @@ class OrderControllerTest {
         assertEquals(orderDTO, responseEntity.getBody().getData());
     }
 
-    /**
-     * Test for verifying the saving of an order.
-     * It mocks the OrderService to return the saved order and
-     * verifies the response from the controller.
-     */
     @Test
     void saveOrder() {
         // Arrange
@@ -144,11 +127,6 @@ class OrderControllerTest {
         assertEquals(order, responseEntity.getBody().getData());
     }
 
-    /**
-     * Test for verifying the update of an order's status.
-     * It mocks the OrderService to return the updated order and
-     * verifies the response from the controller.
-     */
     @Test
     void updateOrderStatus() {
         // Arrange
@@ -162,5 +140,41 @@ class OrderControllerTest {
         // Assert
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals(order, responseEntity.getBody().getData());
+    }
+
+    // New test for getOrders (pageable)
+    @Test
+    void getOrders() {
+        // Arrange
+        int page = 0;
+        int size = 5;
+        String sortBy = "createdDate";
+        String sortDirection = "DESC";
+        PageRequest pageable = PageRequest.of(page, size);
+        Page<Order> pagedOrders = new PageImpl<>(Arrays.asList(order), pageable, 1);
+
+        when(orderService.getOrdersByPageable(page, size, sortBy, sortDirection)).thenReturn(pagedOrders);
+
+        // Act
+        ResponseEntity<ApiResponse<Page<Order>>> responseEntity = orderController.getOrders(page, size, sortBy, sortDirection);
+
+        // Assert
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals(pagedOrders, responseEntity.getBody().getData());
+    }
+
+    // New test for getLastOrders (last five orders)
+    @Test
+    void getLastOrders() {
+        // Arrange
+        List<Order> lastOrders = Arrays.asList(order, order, order, order, order);
+        when(orderService.getLastFiveOrders()).thenReturn(lastOrders);
+
+        // Act
+        ResponseEntity<ApiResponse<List<Order>>> responseEntity = orderController.getLastOrders();
+
+        // Assert
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals(lastOrders, responseEntity.getBody().getData());
     }
 }
