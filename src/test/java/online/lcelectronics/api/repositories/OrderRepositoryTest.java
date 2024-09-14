@@ -10,6 +10,10 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
@@ -75,5 +79,28 @@ class OrderRepositoryTest {
 
         // Assert
         assertTrue(foundOrder.isEmpty());
+    }
+
+    /**
+     * Test for verifying pagination of orders using the pageable method.
+     * It mocks the OrderRepository to return a predefined page of orders
+     * and verifies the response.
+     */
+    @Test
+    void testFindAllWithPagination() {
+        // Arrange
+        Pageable pageable = PageRequest.of(0, 10); // First page, 10 orders per page
+        List<Order> orders = List.of(order); // Create a list with one order
+        Page<Order> orderPage = new PageImpl<>(orders, pageable, orders.size());
+
+        when(orderRepository.findAll(pageable)).thenReturn(orderPage);
+
+        // Act
+        Page<Order> foundOrdersPage = orderRepository.findAll(pageable);
+
+        // Assert
+        assertEquals(1, foundOrdersPage.getTotalElements()); // 1 order found
+        assertEquals(1, foundOrdersPage.getContent().size()); // The content should contain 1 order
+        assertEquals(order.getReferenceCode(), foundOrdersPage.getContent().get(0).getReferenceCode()); // Ensure the order matches
     }
 }

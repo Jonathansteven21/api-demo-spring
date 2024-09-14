@@ -12,7 +12,12 @@ import online.lcelectronics.api.repositories.ClientRepository;
 import online.lcelectronics.api.repositories.HistoricApplianceRepository;
 import online.lcelectronics.api.repositories.ImageRepository;
 import online.lcelectronics.api.repositories.OrderRepository;
+import online.lcelectronics.api.util.PageableUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -37,13 +42,28 @@ public class OrderService {
 
     // Retrieve an order by its ID
     public Order getOrderById(@NotNull(message = "ID cannot be null") Integer id) {
-        return orderRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Order not found with ID: " + id));
+        return orderRepository.findById(id).orElseThrow(() -> new NotFoundException("Order not found with ID: " + id));
     }
 
-    public Order getOrderByReferenceCode(@NotNull String referenceCode) {
-        return orderRepository.findByReferenceCode(referenceCode)
-                .orElseThrow(() -> new NotFoundException("Order not found with reference code: " + referenceCode));
+    // Retrieve the last 5 orders created
+    public List<Order> getLastFiveOrders() {
+        Pageable pageable = PageRequest.of(0, 5, Sort.by("createdDate").descending());
+        return orderRepository.findAll(pageable).getContent();
+    }
+
+    // Retrieve order list by pageable
+    public Page<Order> getOrdersByPageable(Integer page, Integer size, String sortBy, String sortDirection) {
+        Pageable pageable = PageableUtil.createPageable(page, size, sortBy, sortDirection, "createdDate");
+        Page<Order> orderPage = orderRepository.findAll(pageable);
+        if (!orderPage.hasContent()) {
+            throw new NotFoundException("Orders not found with these specifications");
+        }
+        return orderPage;
+    }
+
+    // Retrieve an order by its reference code
+    public Order getOrderByReferenceCode(@NotNull(message = "Reference code cannot be null") String referenceCode) {
+        return orderRepository.findByReferenceCode(referenceCode).orElseThrow(() -> new NotFoundException("Order not found with reference code: " + referenceCode));
     }
 
     // Retrieves a list of orders based on the provided criteria.
@@ -101,8 +121,7 @@ public class OrderService {
     // Update an order status
     @Transactional
     public Order updateOrderStatus(@NotNull Integer id, @NotNull OrderStatus status) {
-        Order existingOrder = orderRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Order not found with ID: " + id));
+        Order existingOrder = orderRepository.findById(id).orElseThrow(() -> new NotFoundException("Order not found with ID: " + id));
 
         existingOrder.setStatus(status);
         return orderRepository.saveAndFlush(existingOrder);
