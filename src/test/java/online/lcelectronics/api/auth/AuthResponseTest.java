@@ -23,7 +23,7 @@ class AuthResponseTest {
      */
     @Test
     void testAllArgsConstructor() {
-        AuthResponse authResponse = new AuthResponse("sampleToken","ADMIN");
+        AuthResponse authResponse = new AuthResponse("sampleToken","ADMIN",100);
         assertThat(authResponse.getToken()).isEqualTo("sampleToken");
     }
 

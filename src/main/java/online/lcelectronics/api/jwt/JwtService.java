@@ -3,7 +3,6 @@ package online.lcelectronics.api.jwt;
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -19,7 +18,7 @@ import io.jsonwebtoken.security.Keys;
 public class JwtService {
 
     private static final Key SECRET_KEY = Keys.secretKeyFor(SignatureAlgorithm.HS256);
-    private static final int EXPIRATION_TIME_SECONDS= 7200;
+    public static final int EXPIRATION_TIME_SECONDS= 7200;
 
     public String getToken(UserDetails user) {
         Map<String, Object> extraClaims = new HashMap<>();
