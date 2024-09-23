@@ -1,8 +1,9 @@
 package online.lcelectronics.api.services;
 
-import online.lcelectronics.api.entities.Image;
-import online.lcelectronics.api.exceptions.NotFoundException;
-import online.lcelectronics.api.repositories.ImageRepository;
+import online.demo.api.entities.Image;
+import online.demo.api.exceptions.NotFoundException;
+import online.demo.api.repositories.ImageRepository;
+import online.demo.api.services.ImageService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

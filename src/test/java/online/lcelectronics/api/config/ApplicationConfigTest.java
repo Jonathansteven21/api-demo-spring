@@ -1,7 +1,8 @@
 package online.lcelectronics.api.config;
 
-import online.lcelectronics.api.user.User;
-import online.lcelectronics.api.user.UserRepository;
+import online.demo.api.config.ApplicationConfig;
+import online.demo.api.user.User;
+import online.demo.api.user.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

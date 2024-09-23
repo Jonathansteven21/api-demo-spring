@@ -1,9 +1,12 @@
 package online.lcelectronics.api.auth;
 
-import online.lcelectronics.api.jwt.JwtService;
-import online.lcelectronics.api.user.Role;
-import online.lcelectronics.api.user.User;
-import online.lcelectronics.api.user.UserRepository;
+import online.demo.api.auth.AuthResponse;
+import online.demo.api.auth.AuthService;
+import online.demo.api.auth.LoginRequest;
+import online.demo.api.jwt.JwtService;
+import online.demo.api.user.Role;
+import online.demo.api.user.User;
+import online.demo.api.user.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

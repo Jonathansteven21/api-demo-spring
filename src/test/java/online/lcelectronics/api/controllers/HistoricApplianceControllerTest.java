@@ -1,9 +1,10 @@
 package online.lcelectronics.api.controllers;
 
-import online.lcelectronics.api.entities.ApplianceModel;
-import online.lcelectronics.api.entities.HistoricAppliance;
-import online.lcelectronics.api.util.ApiResponse;
-import online.lcelectronics.api.services.HistoricApplianceService;
+import online.demo.api.controllers.HistoricApplianceController;
+import online.demo.api.entities.ApplianceModel;
+import online.demo.api.entities.HistoricAppliance;
+import online.demo.api.util.ApiResponse;
+import online.demo.api.services.HistoricApplianceService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

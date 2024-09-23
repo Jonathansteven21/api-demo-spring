@@ -1,7 +1,8 @@
 package online.lcelectronics.api.repositories;
 
-import online.lcelectronics.api.entities.ApplianceModel;
-import online.lcelectronics.api.entities.HistoricAppliance;
+import online.demo.api.entities.ApplianceModel;
+import online.demo.api.entities.HistoricAppliance;
+import online.demo.api.repositories.HistoricApplianceRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

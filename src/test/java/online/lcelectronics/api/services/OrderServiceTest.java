@@ -1,15 +1,16 @@
 package online.lcelectronics.api.services;
 
-import online.lcelectronics.api.entities.Client;
-import online.lcelectronics.api.entities.HistoricAppliance;
-import online.lcelectronics.api.entities.Image;
-import online.lcelectronics.api.entities.Order;
-import online.lcelectronics.api.enums.OrderStatus;
-import online.lcelectronics.api.exceptions.NotFoundException;
-import online.lcelectronics.api.repositories.ClientRepository;
-import online.lcelectronics.api.repositories.HistoricApplianceRepository;
-import online.lcelectronics.api.repositories.ImageRepository;
-import online.lcelectronics.api.repositories.OrderRepository;
+import online.demo.api.entities.Client;
+import online.demo.api.entities.HistoricAppliance;
+import online.demo.api.entities.Image;
+import online.demo.api.entities.Order;
+import online.demo.api.enums.OrderStatus;
+import online.demo.api.exceptions.NotFoundException;
+import online.demo.api.repositories.ClientRepository;
+import online.demo.api.repositories.HistoricApplianceRepository;
+import online.demo.api.repositories.ImageRepository;
+import online.demo.api.repositories.OrderRepository;
+import online.demo.api.services.OrderService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

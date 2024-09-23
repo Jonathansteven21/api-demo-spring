@@ -4,8 +4,9 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
-import online.lcelectronics.api.enums.Brand;
-import online.lcelectronics.api.enums.Component;
+import online.demo.api.entities.Inventory;
+import online.demo.api.enums.Brand;
+import online.demo.api.enums.Component;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

@@ -1,9 +1,10 @@
 package online.lcelectronics.api.controllers;
 
-import online.lcelectronics.api.entities.Order;
-import online.lcelectronics.api.entities.OrderHistory;
-import online.lcelectronics.api.services.OrderHistoryService;
-import online.lcelectronics.api.util.ApiResponse;
+import online.demo.api.controllers.OrderHistoryController;
+import online.demo.api.entities.Order;
+import online.demo.api.entities.OrderHistory;
+import online.demo.api.services.OrderHistoryService;
+import online.demo.api.util.ApiResponse;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;

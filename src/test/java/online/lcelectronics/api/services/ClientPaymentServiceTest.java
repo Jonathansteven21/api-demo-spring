@@ -1,10 +1,11 @@
 package online.lcelectronics.api.services;
 
-import online.lcelectronics.api.entities.ClientPayment;
-import online.lcelectronics.api.entities.Order;
-import online.lcelectronics.api.exceptions.NotFoundException;
-import online.lcelectronics.api.repositories.ClientPaymentRepository;
-import online.lcelectronics.api.repositories.OrderRepository;
+import online.demo.api.entities.ClientPayment;
+import online.demo.api.entities.Order;
+import online.demo.api.exceptions.NotFoundException;
+import online.demo.api.repositories.ClientPaymentRepository;
+import online.demo.api.repositories.OrderRepository;
+import online.demo.api.services.ClientPaymentService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

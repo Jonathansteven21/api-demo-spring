@@ -1,7 +1,8 @@
 package online.lcelectronics.api.repositories;
 
-import online.lcelectronics.api.entities.Order;
-import online.lcelectronics.api.entities.RepairCost;
+import online.demo.api.entities.Order;
+import online.demo.api.entities.RepairCost;
+import online.demo.api.repositories.RepairCostRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

@@ -2,6 +2,10 @@ package online.lcelectronics.api.auth;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import online.demo.api.auth.AuthController;
+import online.demo.api.auth.AuthResponse;
+import online.demo.api.auth.AuthService;
+import online.demo.api.auth.LoginRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;

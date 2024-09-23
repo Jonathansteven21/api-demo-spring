@@ -1,8 +1,9 @@
 package online.lcelectronics.api.controllers;
 
-import online.lcelectronics.api.entities.RepairCost;
-import online.lcelectronics.api.services.RepairCostService;
-import online.lcelectronics.api.util.ApiResponse;
+import online.demo.api.controllers.RepairCostController;
+import online.demo.api.entities.RepairCost;
+import online.demo.api.services.RepairCostService;
+import online.demo.api.util.ApiResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

@@ -1,6 +1,7 @@
 package online.lcelectronics.api.repositories;
 
-import online.lcelectronics.api.entities.Inventory;
+import online.demo.api.entities.Inventory;
+import online.demo.api.repositories.InventoryRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

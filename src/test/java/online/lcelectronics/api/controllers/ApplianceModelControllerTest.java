@@ -1,12 +1,13 @@
 package online.lcelectronics.api.controllers;
 
-import online.lcelectronics.api.converters.ApplianceModelConverter;
-import online.lcelectronics.api.dto.ApplianceModelDTO;
-import online.lcelectronics.api.entities.ApplianceModel;
-import online.lcelectronics.api.enums.ApplianceCategory;
-import online.lcelectronics.api.enums.Brand;
-import online.lcelectronics.api.util.ApiResponse;
-import online.lcelectronics.api.services.ApplianceModelService;
+import online.demo.api.controllers.ApplianceModelController;
+import online.demo.api.converters.ApplianceModelConverter;
+import online.demo.api.dto.ApplianceModelDTO;
+import online.demo.api.entities.ApplianceModel;
+import online.demo.api.enums.ApplianceCategory;
+import online.demo.api.enums.Brand;
+import online.demo.api.util.ApiResponse;
+import online.demo.api.services.ApplianceModelService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

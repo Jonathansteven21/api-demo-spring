@@ -1,5 +1,8 @@
 package online.lcelectronics.api.user;
 
+import online.demo.api.user.Role;
+import online.demo.api.user.User;
+import online.demo.api.user.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

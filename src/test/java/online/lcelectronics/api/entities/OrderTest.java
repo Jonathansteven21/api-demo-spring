@@ -3,7 +3,11 @@ package online.lcelectronics.api.entities;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.ValidatorFactory;
-import online.lcelectronics.api.enums.OrderStatus;
+import online.demo.api.entities.Client;
+import online.demo.api.entities.HistoricAppliance;
+import online.demo.api.entities.Image;
+import online.demo.api.entities.Order;
+import online.demo.api.enums.OrderStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

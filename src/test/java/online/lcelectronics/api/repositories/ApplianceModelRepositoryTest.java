@@ -1,6 +1,7 @@
 package online.lcelectronics.api.repositories;
 
-import online.lcelectronics.api.entities.ApplianceModel;
+import online.demo.api.entities.ApplianceModel;
+import online.demo.api.repositories.ApplianceModelRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,7 +13,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;

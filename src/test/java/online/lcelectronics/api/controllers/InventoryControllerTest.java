@@ -1,10 +1,11 @@
 package online.lcelectronics.api.controllers;
 
-import online.lcelectronics.api.entities.Inventory;
-import online.lcelectronics.api.enums.Brand;
-import online.lcelectronics.api.enums.Component;
-import online.lcelectronics.api.services.InventoryService;
-import online.lcelectronics.api.util.ApiResponse;
+import online.demo.api.controllers.InventoryController;
+import online.demo.api.entities.Inventory;
+import online.demo.api.enums.Brand;
+import online.demo.api.enums.Component;
+import online.demo.api.services.InventoryService;
+import online.demo.api.util.ApiResponse;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

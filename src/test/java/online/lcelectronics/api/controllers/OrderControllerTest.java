@@ -1,15 +1,16 @@
 package online.lcelectronics.api.controllers;
 
-import online.lcelectronics.api.converters.ClientConverter;
-import online.lcelectronics.api.converters.OrderConverter;
-import online.lcelectronics.api.dto.ClientDTO;
-import online.lcelectronics.api.dto.OrderDTO;
-import online.lcelectronics.api.entities.Client;
-import online.lcelectronics.api.entities.HistoricAppliance;
-import online.lcelectronics.api.entities.Order;
-import online.lcelectronics.api.enums.OrderStatus;
-import online.lcelectronics.api.services.OrderService;
-import online.lcelectronics.api.util.ApiResponse;
+import online.demo.api.controllers.OrderController;
+import online.demo.api.converters.ClientConverter;
+import online.demo.api.converters.OrderConverter;
+import online.demo.api.dto.ClientDTO;
+import online.demo.api.dto.OrderDTO;
+import online.demo.api.entities.Client;
+import online.demo.api.entities.HistoricAppliance;
+import online.demo.api.entities.Order;
+import online.demo.api.enums.OrderStatus;
+import online.demo.api.services.OrderService;
+import online.demo.api.util.ApiResponse;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;

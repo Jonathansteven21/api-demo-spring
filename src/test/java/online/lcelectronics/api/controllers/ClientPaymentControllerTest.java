@@ -1,9 +1,10 @@
 package online.lcelectronics.api.controllers;
 
-import online.lcelectronics.api.entities.ClientPayment;
-import online.lcelectronics.api.entities.Order;
-import online.lcelectronics.api.services.ClientPaymentService;
-import online.lcelectronics.api.util.ApiResponse;
+import online.demo.api.controllers.ClientPaymentController;
+import online.demo.api.entities.ClientPayment;
+import online.demo.api.entities.Order;
+import online.demo.api.services.ClientPaymentService;
+import online.demo.api.util.ApiResponse;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;

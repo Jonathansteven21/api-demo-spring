@@ -1,6 +1,7 @@
 package online.lcelectronics.api.repositories;
 
-import online.lcelectronics.api.entities.Client;
+import online.demo.api.entities.Client;
+import online.demo.api.repositories.ClientRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

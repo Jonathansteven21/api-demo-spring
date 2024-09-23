@@ -3,6 +3,8 @@ package online.lcelectronics.api.entities;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.ValidatorFactory;
+import online.demo.api.entities.Order;
+import online.demo.api.entities.RepairCost;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

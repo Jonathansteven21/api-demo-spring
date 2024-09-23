@@ -1,10 +1,11 @@
 package online.lcelectronics.api.entities.specs;
 
 import jakarta.persistence.criteria.*;
-import online.lcelectronics.api.entities.ApplianceModel;
-import online.lcelectronics.api.entities.Inventory;
-import online.lcelectronics.api.enums.Brand;
-import online.lcelectronics.api.enums.Component;
+import online.demo.api.entities.ApplianceModel;
+import online.demo.api.entities.Inventory;
+import online.demo.api.entities.specs.InventorySpecification;
+import online.demo.api.enums.Brand;
+import online.demo.api.enums.Component;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.jpa.domain.Specification;
 

@@ -1,10 +1,11 @@
 package online.lcelectronics.api.services;
 
-import online.lcelectronics.api.entities.ApplianceModel;
-import online.lcelectronics.api.entities.HistoricAppliance;
-import online.lcelectronics.api.exceptions.NotFoundException;
-import online.lcelectronics.api.repositories.ApplianceModelRepository;
-import online.lcelectronics.api.repositories.HistoricApplianceRepository;
+import online.demo.api.entities.ApplianceModel;
+import online.demo.api.entities.HistoricAppliance;
+import online.demo.api.exceptions.NotFoundException;
+import online.demo.api.repositories.ApplianceModelRepository;
+import online.demo.api.repositories.HistoricApplianceRepository;
+import online.demo.api.services.HistoricApplianceService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

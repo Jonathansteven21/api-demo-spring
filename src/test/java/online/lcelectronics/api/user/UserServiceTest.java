@@ -1,6 +1,9 @@
 package online.lcelectronics.api.user;
 
-import online.lcelectronics.api.exceptions.NotFoundException;
+import online.demo.api.exceptions.NotFoundException;
+import online.demo.api.user.User;
+import online.demo.api.user.UserRepository;
+import online.demo.api.user.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

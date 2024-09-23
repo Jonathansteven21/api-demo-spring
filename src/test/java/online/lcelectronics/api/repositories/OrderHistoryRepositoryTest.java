@@ -1,7 +1,8 @@
 package online.lcelectronics.api.repositories;
 
-import online.lcelectronics.api.entities.Order;
-import online.lcelectronics.api.entities.OrderHistory;
+import online.demo.api.entities.Order;
+import online.demo.api.entities.OrderHistory;
+import online.demo.api.repositories.OrderHistoryRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

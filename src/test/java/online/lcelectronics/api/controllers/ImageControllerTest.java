@@ -1,8 +1,9 @@
 package online.lcelectronics.api.controllers;
 
-import online.lcelectronics.api.entities.Image;
-import online.lcelectronics.api.util.ApiResponse;
-import online.lcelectronics.api.services.ImageService;
+import online.demo.api.controllers.ImageController;
+import online.demo.api.entities.Image;
+import online.demo.api.util.ApiResponse;
+import online.demo.api.services.ImageService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

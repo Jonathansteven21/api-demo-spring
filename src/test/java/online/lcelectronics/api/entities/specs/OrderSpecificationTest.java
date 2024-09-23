@@ -1,8 +1,9 @@
 package online.lcelectronics.api.entities.specs;
 
 import jakarta.persistence.criteria.*;
-import online.lcelectronics.api.entities.Order;
-import online.lcelectronics.api.enums.OrderStatus;
+import online.demo.api.entities.Order;
+import online.demo.api.entities.specs.OrderSpecification;
+import online.demo.api.enums.OrderStatus;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.jpa.domain.Specification;
 

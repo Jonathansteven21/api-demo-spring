@@ -1,8 +1,9 @@
 package online.lcelectronics.api.entities.specs;
 
-import online.lcelectronics.api.entities.ApplianceModel;
-import online.lcelectronics.api.enums.ApplianceCategory;
-import online.lcelectronics.api.enums.Brand;
+import online.demo.api.entities.ApplianceModel;
+import online.demo.api.entities.specs.ApplianceModelSpecification;
+import online.demo.api.enums.ApplianceCategory;
+import online.demo.api.enums.Brand;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.jpa.domain.Specification;
 

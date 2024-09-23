@@ -1,10 +1,11 @@
 package online.lcelectronics.api.repositories;
 
-import online.lcelectronics.api.entities.Client;
-import online.lcelectronics.api.entities.HistoricAppliance;
-import online.lcelectronics.api.entities.Image;
-import online.lcelectronics.api.entities.Order;
-import online.lcelectronics.api.enums.OrderStatus;
+import online.demo.api.entities.Client;
+import online.demo.api.entities.HistoricAppliance;
+import online.demo.api.entities.Image;
+import online.demo.api.entities.Order;
+import online.demo.api.enums.OrderStatus;
+import online.demo.api.repositories.OrderRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

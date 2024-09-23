@@ -1,11 +1,12 @@
 package online.lcelectronics.api.services;
 
 import jakarta.validation.ConstraintViolationException;
-import online.lcelectronics.api.entities.ApplianceModel;
-import online.lcelectronics.api.enums.ApplianceCategory;
-import online.lcelectronics.api.enums.Brand;
-import online.lcelectronics.api.exceptions.NotFoundException;
-import online.lcelectronics.api.repositories.ApplianceModelRepository;
+import online.demo.api.entities.ApplianceModel;
+import online.demo.api.enums.ApplianceCategory;
+import online.demo.api.enums.Brand;
+import online.demo.api.exceptions.NotFoundException;
+import online.demo.api.repositories.ApplianceModelRepository;
+import online.demo.api.services.ApplianceModelService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
